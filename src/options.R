@@ -28,7 +28,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$user = Sys.info()[["user"]]
   
   # Name of analysis to run (cannot contain period symbol)
-  o$analysis_name = "demo"
+  o$analysis_name = "2020_baseline"
   
   # Set analysis name and create output directory system
   o = set_dirs(o)  # See directories.R
@@ -55,7 +55,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   # Use R or python backend for parsing yaml files
   #
   # NOTE: Python package can handle anchors and aliases
-  o$read_yaml_engine = "python" # OPTIONS: "R" or "python"
+  o$read_yaml_engine = "R" # OPTIONS: "R" or "python"
   
   # ---- Calibration settings ----
   

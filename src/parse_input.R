@@ -24,7 +24,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   
   # Read yaml can be done via R or python
   if (o$read_yaml_engine == "R")      read_yaml_fn = "read_yaml"
-  if (o$read_yaml_engine == "python") read_yaml_fn = "read_yaml_py"
+  #if (o$read_yaml_engine == "python") read_yaml_fn = "read_yaml_py"
   
   # Load default model parameters
   y = get(read_yaml_fn)(o$pth$params_default)
