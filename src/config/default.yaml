@@ -446,7 +446,7 @@ replace_deceased: yes
 # Flag for ageing people each year
 annual_ageing: yes
 
-# 90 yearly bins for ages [0-1], (1-2], ..., (89-90+] required
+# 110 yearly bins for ages [0-1], (1-2], ..., (109-110+] required
 demography:
   1: 0.010576408
   2: 0.010811583
@@ -538,6 +538,26 @@ demography:
   88: 0.003121599
   89: 0.002766237
   90: 0.011291680
+  91: 0
+  92: 0
+  93: 0
+  94: 0
+  95: 0
+  96: 0
+  97: 0
+  98: 0
+  99: 0
+  100: 0
+  101: 0
+  102: 0
+  103: 0
+  104: 0
+  105: 0
+  106: 0
+  107: 0
+  108: 0
+  109: 0
+  110: 0
 
 # ---- Health economics ----
 
