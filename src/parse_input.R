@@ -72,10 +72,13 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   
   # ---- Demographics ----
   # Ethnic groups
-  y$ethnic_groups = c("white", "black", "asian")
+  y$sex = c("male", "female", "unknown")
   
-  # Hardcode maximum upper age to 90
-  age_max = 110
+  # Ethnic groups
+  y$ethnic_groups = c("white", "black", "asian", "white_black", "white_asian")
+  
+  # Hardcode maximum upper age to 100
+  age_max = 100
   
   # All ages modelled
   y$ages = 1 : age_max - 1L

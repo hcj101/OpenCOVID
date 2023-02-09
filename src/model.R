@@ -215,7 +215,13 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   
   # Individual IDs are essentially row numbers
   ppl[, id := 1 : n]
-
+  
+  # Sample sex
+  sample_sex = sample_vec(x = p$sex,  size = n, replace = TRUE, prob = p$p_sex)
+  
+  # Apply sex
+  ppl[, sex := sample_sex]
+ 
   # Sample ethnicity
   sample_ethnicity = sample_vec(x = p$ethnic_groups,  size = n, replace = TRUE, prob = p$p_ethnic_groups)
 
@@ -232,7 +238,7 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   
   # Apply birthday index - do not use 0 for newborns to stagger ageing
   ppl[, birthday := sample_bday]
-
+  
   # ---- Assign risk groups ----
   
   # Sanity check that all defined risk groups are able to modelled

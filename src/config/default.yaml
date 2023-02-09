@@ -421,11 +421,19 @@ durations:
     sd: 1.0
 
 # ---- Demography ----
+# Sex
+p_sex:
+  male: 0.495
+  female: 0.495
+  unknown: 0.01
+  
 # Ethnic groups
 p_ethnic_groups:
-  white: 0.86
-  black: 0.07
-  asian: 0.07
+  white: 0.82
+  black: 0.04
+  asian: 0.11
+  white_black: 0.02
+  white_asian: 0.01
   
 # Age-related probabiliy of non-COVID 'natural' death
 natural_death_age:
@@ -446,7 +454,7 @@ replace_deceased: yes
 # Flag for ageing people each year
 annual_ageing: yes
 
-# 110 yearly bins for ages [0-1], (1-2], ..., (109-110+] required
+# 101 yearly bins for ages [0-1], (1-2], ..., (100-101+] required
 demography:
   1: 0.010576408
   2: 0.010811583
@@ -548,16 +556,7 @@ demography:
   98: 0
   99: 0
   100: 0
-  101: 0
-  102: 0
-  103: 0
-  104: 0
-  105: 0
-  106: 0
-  107: 0
-  108: 0
-  109: 0
-  110: 0
+
 
 # ---- Health economics ----
 

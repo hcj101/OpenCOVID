@@ -6,6 +6,10 @@ model_variables:
   id:
     class: integer
     value: 0  # Assigned in create_pop
+  # Sex at birth of individual
+  sex:
+    class: character
+    value: "NA"  # Assigned in create_pop
   # Ethnic group of individual
   ethnicity:
     class: character
