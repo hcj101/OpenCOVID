@@ -22,6 +22,10 @@ model_variables:
   healthcare_worker:
     class: logical
     value: no
+  # Is this individual a key worker
+  key_worker:
+    class: logical
+    value: no
   # Is this individual unable to receive a vaccine
   vax_unsuitable:
     class: logical

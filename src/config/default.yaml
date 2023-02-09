@@ -146,6 +146,13 @@ risk_groups:
     age_dist:
       fn: "dunif"
     probability: 0.10
+  key_worker:
+    id: "k"
+    age_lower: 18
+    age_upper: 65
+    age_dist:
+      fn: "dunif"
+    probability: 0.10
   vax_unsuitable:
     id: "v"
     age_lower: 12
