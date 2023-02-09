@@ -237,11 +237,20 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   for (this_group in names(p$risk_groups)) {
     
     # Probability of acceptance per person (dependent on age)
-    risk_prop = p$risk_groups[[this_group]]$probability[ppl[, age] + 1]
+    risk_prop = p$risk_groups[[this_group]]$probability[ppl[, age] + 1] 
     
     # Sample TRUE and FALSE for all in this age group accordingly 
     ppl[, (this_group) := runif(n) < risk_prop]
   }
+  
+  # ---- Split key workers ----
+  # Probability of a key worker being a healthcare worker
+  p_healthcare_Worker =  p$p_healthcare_worker
+  
+  # Sample logical and populate vaccine_accept variable
+  ppl[key_worker == TRUE, 
+      healthcare_worker := sample_vec(c(TRUE, FALSE), size = .N, replace = TRUE, 
+                                   prob = c(p_healthcare_Worker, 1 - p_healthcare_Worker))]
   
   # ---- Set vaccination priority policy and acceptance ----
   
@@ -254,6 +263,8 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
     # Evaluate the condition and set priority for any that satisfy
     ppl[eval_str(this_group$condition), priority_group := this_group$id]
   }
+  
+  browser()
   
   # Remove all those that are no able to receive vaccination (but can receive PrEP)
   ppl[vax_unsuitable == TRUE, priority_group := "none"]

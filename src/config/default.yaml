@@ -131,28 +131,30 @@ priority_groups:
   condition: "age >= 18 & age < 65"
   
 # Risk groups
+p_healthcare_worker : 0.5 # Proportion of key workers who are healthcare workers
+
 risk_groups:
   comorbidities:
     id: "c"
     age_lower: 0
-    age_upper: 75
+    age_upper: 90
     age_dist:
       fn: "dunif"
     probability: 0.08
-  healthcare_worker:
-    id: "h"
-    age_lower: 18
-    age_upper: 65
-    age_dist:
-      fn: "dunif"
-    probability: 0.10
   key_worker:
     id: "k"
-    age_lower: 18
+    age_lower: 16
     age_upper: 65
     age_dist:
       fn: "dunif"
-    probability: 0.10
+    probability: 0.2
+  healthcare_worker:
+    id: "h"
+    age_lower: 16
+    age_upper: 65
+    age_dist:
+      fn: "dunif"
+    probability: 0.0
   vax_unsuitable:
     id: "v"
     age_lower: 12
@@ -162,7 +164,7 @@ risk_groups:
       shape1: 4
       shape2: 1
     probability: 0.035  # Approx 2% of population
-  
+
 # ---- Vaccination details ----
   
 # Vaccine definition and immunity profile

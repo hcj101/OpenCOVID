@@ -18,16 +18,20 @@ model_variables:
   comorbidities:
     class: logical
     value: no
-  # Is this individual working in healthcare
-  healthcare_worker:
-    class: logical
-    value: no
   # Is this individual a key worker
   key_worker:
     class: logical
     value: no
   # Is this individual unable to receive a vaccine
   vax_unsuitable:
+    class: logical
+    value: no
+  # Is this key worker working in healthcare
+  p_healthcare_worker:
+    class: double
+    value: 0.5
+  # Is this individual working in healthcare
+  healthcare_worker:
     class: logical
     value: no
   # Disease state of infected individual pre-symptomatic, asymptomatic, mild, severe, or critical	
