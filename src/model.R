@@ -32,7 +32,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   
   # Shorthand for model parameters
   p = yaml$parsed
-  
+
   # ---- Model set up ----
   
   if (verbose != "none") message(" - Running model")
@@ -215,6 +215,12 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   
   # Individual IDs are essentially row numbers
   ppl[, id := 1 : n]
+
+  # Sample ethnicity
+  sample_ethnicity = sample_vec(x = p$ethnic_groups,  size = n, replace = TRUE, prob = p$p_ethnic_groups)
+
+  # Apply ethnicity
+  ppl[, ethnicity := sample_ethnicity]
   
   # Sample ages from some distribution and a birthday index
   sample_ages = sample_vec(x = p$ages,  size = n, replace = TRUE, prob = p$demography)
@@ -226,7 +232,7 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   
   # Apply birthday index - do not use 0 for newborns to stagger ageing
   ppl[, birthday := sample_bday]
-  
+
   # ---- Assign risk groups ----
   
   # Sanity check that all defined risk groups are able to modelled
@@ -247,7 +253,7 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   # Probability of a key worker being a healthcare worker
   p_healthcare_Worker =  p$p_healthcare_worker
   
-  # Sample logical and populate vaccine_accept variable
+  # Sample healthcare workers from key workers
   ppl[key_worker == TRUE, 
       healthcare_worker := sample_vec(c(TRUE, FALSE), size = .N, replace = TRUE, 
                                    prob = c(p_healthcare_Worker, 1 - p_healthcare_Worker))]
@@ -263,8 +269,6 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
     # Evaluate the condition and set priority for any that satisfy
     ppl[eval_str(this_group$condition), priority_group := this_group$id]
   }
-  
-  browser()
   
   # Remove all those that are no able to receive vaccination (but can receive PrEP)
   ppl[vax_unsuitable == TRUE, priority_group := "none"]

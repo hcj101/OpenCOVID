@@ -6,6 +6,10 @@ model_variables:
   id:
     class: integer
     value: 0  # Assigned in create_pop
+  # Ethnic group of individual
+  ethnicity:
+    class: character
+    value: "NA"  # Assigned in create_pop
   # Current age of individual
   age:
     class: integer
@@ -26,10 +30,6 @@ model_variables:
   vax_unsuitable:
     class: logical
     value: no
-  # Is this key worker working in healthcare
-  p_healthcare_worker:
-    class: double
-    value: 0.5
   # Is this individual working in healthcare
   healthcare_worker:
     class: logical

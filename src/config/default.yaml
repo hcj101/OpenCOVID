@@ -421,7 +421,12 @@ durations:
     sd: 1.0
 
 # ---- Demography ----
-
+# Ethnic groups
+p_ethnic_groups:
+  white: 0.86
+  black: 0.07
+  asian: 0.07
+  
 # Age-related probabiliy of non-COVID 'natural' death
 natural_death_age:
   fn: "logistic"
@@ -533,7 +538,7 @@ demography:
   88: 0.003121599
   89: 0.002766237
   90: 0.011291680
-  
+
 # ---- Health economics ----
 
 # Cost units (used for plotting purposes only)

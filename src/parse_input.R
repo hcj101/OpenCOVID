@@ -71,6 +71,8 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   n_days_total = y$n_days + n_days_init
   
   # ---- Demographics ----
+  # Ethnic groups
+  y$ethnic_groups = c("white", "black", "asian")
   
   # Hardcode maximum upper age to 90
   age_max = 90
@@ -677,7 +679,8 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   priority_groups = c(y$priority_groups$id, "none")
   
   # List of all possible metric groups, and their respective groups
-  y$count = list(age            = y$ages, 
+  y$count = list(ethnicity      = y$ethnic_groups,
+                 age            = y$ages, 
                  variant        = y$variants$id, 
                  infections     = 0 : y$max_infection_count, 
                  vaccine_doses  = 0 : y$max_dose_count,
