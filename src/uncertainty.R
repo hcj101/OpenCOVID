@@ -92,7 +92,7 @@ sample_uncertainty = function(o) {
 # Sample single average value from uncertainty distribution(s)
 # ---------------------------------------------------------
 sample_average = function(o, average_fn = "median") {
-  
+ 
   # Extract all parameters for which uncertainty has been defined
   u = parse_yaml(o, "all", uncert = "*read*")
   

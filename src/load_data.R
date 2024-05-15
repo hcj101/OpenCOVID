@@ -14,7 +14,7 @@ load_data = function(o, fit, synthetic = NULL) {
   
   # Check flag for whether we need to load data
   if (fit$.use_data == TRUE) {
-    
+   
     # Extract subset of inputs relevant for loading appropriate data
     opts = c(type = fit$input$calibration_type, fit$input$calibration_options)
     
@@ -26,8 +26,8 @@ load_data = function(o, fit, synthetic = NULL) {
     
     # Identify data source regardless of capitalisation
     opts$data_source = lapply(opts$data_source, toupper)
-    
-    # Load epi data regardless of what we're fititng to
+   
+    # Load epi data regardless of what we're fitting to
     fit = load_epi(o, opts, fit, synthetic)
     
     # Load Re estimates if necessary (may or may not use epi data)
@@ -46,17 +46,17 @@ load_data = function(o, fit, synthetic = NULL) {
   # Display target Re if appropriate
   if (!is.na(fit$target))
     message("  > Re target: ", round(fit$target, digits = 2))
-  
+  browser()
   # Quick plot of fitting data
-  # g = ggplot(fit$data, aes(x = date, y = value, colour = metric)) +
-  #   geom_line(size = 3, alpha = 0.5) +
-  #   facet_grid(metric ~ type, scales = "free_y")
+   g = ggplot(fit$data, aes(x = date, y = value, colour = metric)) +
+     geom_line(size = 3, alpha = 0.5) +
+     facet_grid(metric ~ type, scales = "free_y")
   
   return(fit)
 }
 
 # ---------------------------------------------------------
-# Load emperical epidemiological data from source (or generate synthetic data)
+# Load empirical epidemiological data from source (or generate synthetic data)
 # ---------------------------------------------------------
 load_epi = function(o, opts, fit, synthetic) {
   
@@ -69,18 +69,73 @@ load_epi = function(o, opts, fit, synthetic) {
     # We're done, return out early
     return(fit)
   }
-  
-  # Otherwise load empirical epidemiological data...
+
   message(" - Loading epi data: ", opts$data_source$epi)
   
-  # ---- Source: ECDC ----
+  # ---- Source: UK ----
   
   # All dates we're interested in
   dates_df = get_data_dates(opts)
   
+  # Load data from UK (ONS & PHE)
+  if (opts$data_source$epi == "UK") {
+   browser()
+    # Load full epi data file for England. NB Not currently including other 3 nations
+    raw_data = read.csv(o$uk_data, fileEncoding = "UTF-8-BOM")
+    
+    # Scalar for 'per 100k population' values 
+    scale_pop = opts$country_pop / 1e5
+    
+    # Convert dates to R-interpretable
+    data_cases = raw_data %>%
+                  mutate(date = format_date(date)) %>%
+      
+      # Pivot wider to standardise dates
+      pivot_wider(names_from = metric,
+                  values_from = value) %>%
+      
+      # Keep only dates of interest 
+      right_join(y  = dates_df,
+                 by = "date") %>%
+      arrange(date) %>%
+      
+      # Scale 'weekly' and 'per 100k' appropriately...
+      mutate(across(contains("Weekly"),   ~ . / 7), 
+             across(contains("per_100000"), ~ . * scale_pop)) %>% 
+      rename(any_of(o$data_dict$uk)) %>%
+      
+      # Back fill weekly data to represent that value over the whole week
+      #TODO: linear interpolation if reolution higher than one week
+      
+      fill(any_of(names(o$data_dict$uk)), .direction = "up") %>%
+      pivot_longer(cols = c(-date, -day), 
+                   names_to = "metric") %>%
+      filter(!is.na(value)) %>%
+      arrange(metric, date) %>% 
+        
+      # Summarise time period if desired...
+      change_time_period(dates_df, opts$data_period) %>%
+      setDT()
+    
+    # Throw error if no case data for this country
+    if (nrow(data_cases) == 0)
+      stop("No data found for country '", opts$country)
+    
+    # Filter dates of interest for fitting and plotting
+    fit$data = data_cases
+    
+    # Check no data is negative
+    if (any(fit$data$value < 0))
+      stop("Negative data values identified")
+    
+  }
+    
+  
+  # ---- Source: ECDC ----
+
   # Pull data from ECDC
   if (opts$data_source$epi == "ECDC") {
-    
+    browser()
     # Load raw case and death data from ECDC
     raw_data = read.csv(o$ecdc_api$cases, fileEncoding = "UTF-8-BOM")
     
@@ -154,7 +209,7 @@ load_epi = function(o, opts, fit, synthetic) {
     if (any(fit$data$value < 0))
       stop("Negative data values identified")
   }
-  
+  #browser()
   # Apply pop scaler to every epi metric (-> per 100,000 people)
   fit$data[, value := value / scale_pop]
   

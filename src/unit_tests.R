@@ -26,10 +26,10 @@ run_model_test = function(o, scenario = "baseline", rerun = TRUE) {
     
     # Load calibration result (if it exists)
     fit_list = load_calibration(o, throw_error = FALSE)$best
-    
+
     # If uncertainty defined, take the average over the distribution(s)
     uncert_list = sample_average(o)  # See uncertainty.R
-    
+
     # Run model for the defined scenario (see model.R)
     result = model(o, scenario,
                    seed    = 1,

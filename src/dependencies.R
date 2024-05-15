@@ -8,7 +8,7 @@
 # ---- R version check ----
 
 # R versions for which this project has been tested and is stable
-stable_versions = "4.1.0"
+stable_versions = "4.3.0"
 
 # R versions for which this project is stable (as a string)
 stable_str = paste(stable_versions, collapse = ", ")

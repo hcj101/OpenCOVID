@@ -40,11 +40,20 @@ set_options = function(do_step = NA, quiet = FALSE) {
     list(cases = "https://opendata.ecdc.europa.eu/covid19/nationalcasedeath_eueea_daily_ei/csv", 
          hosp  = "https://opendata.ecdc.europa.eu/covid19/hospitalicuadmissionrates/csv")
   
+  # UK data files
+  o$uk_data = "C://Users//helen//Documents//GitHub//OpenCOVID//src//data//2020_England.csv"
+   
   # ETH effective reproduction number estimates
   o$eth_api = "https://raw.githubusercontent.com/covid-19-Re/dailyRe-Data/master/<country>-estimates.csv"
   
   # API endpoint for national-level Oxford Stringency Index data
   o$osi_api = "https://covidtrackerapi.bsg.ox.ac.uk/api/v2/stringency/date-range/"
+  
+  # Data dictionary: UK indicators
+  o$data_dict$uk = c(confirmed = "weekly_confirmed", 
+                       deaths  = "weekly_deaths",
+                       hospital_admissions = "weekly_hospital_admissions_per_100000", 
+                       icu_admissions      = "weekly_ICU_admissions_per_100000")
   
   # Data dictionary: ECDC hospital & ICU indicators
   o$data_dict$ecdc = c(hospital_beds = "Daily hospital occupancy", 
@@ -134,7 +143,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$check_yaml_consistency = FALSE  # Should be more efficient to be a default check
   
   # Choose cluster partition for parallel jobs
-  o$cluster_partition = "scicore" # OPTIONS: "covid19" or "scicore"
+  o$cluster_partition = "lshtm" # OPTIONS: "covid19" or "scicore"
   
   # If running on scicore partition, you also need to define a job time 
   # 
@@ -156,8 +165,8 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$job_limit = 600
   
   # Define names for cluster log and error files
-  o$log_file = "scicore_log.txt"
-  o$err_file = "scicore_error.txt"
+  o$log_file = "covid_log.txt"
+  o$err_file = "covid_error.txt"
   
   # Flag to remove cluster logs when jobs have successfully completed
   o$rm_cluster_log = TRUE  # Set to FALSE to bebug any cluster errors

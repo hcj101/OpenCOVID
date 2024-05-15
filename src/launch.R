@@ -17,7 +17,8 @@
 rm(list = ls())
 
 # Set working directory to sourced file
-if (interactive()) setwd(getSrcDirectory(function() {}))
+#if (interactive()) setwd(getSrcDirectory(function() {}))
+setwd("C:\\Users\\helen\\Documents\\GitHub\\OpenCOVID\\src\\")
 
 # Load all required packages and functions
 source("dependencies.R")
@@ -29,7 +30,7 @@ if (interactive()) clc()  # Clear console
 message("Running OpenCOVID v4.2 alpha")
 
 # Set options (see options.R)
-o = set_options(do_step = 0)
+o = set_options(do_step = 1)
 
 # Step 0) Test run a single simulation
 run_model_test(o)  # See unit_tests.R
