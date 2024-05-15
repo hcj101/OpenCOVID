@@ -46,11 +46,11 @@ load_data = function(o, fit, synthetic = NULL) {
   # Display target Re if appropriate
   if (!is.na(fit$target))
     message("  > Re target: ", round(fit$target, digits = 2))
-  browser()
+  #browser()
   # Quick plot of fitting data
-   g = ggplot(fit$data, aes(x = date, y = value, colour = metric)) +
-     geom_line(size = 3, alpha = 0.5) +
-     facet_grid(metric ~ type, scales = "free_y")
+  # g = ggplot(fit$data, aes(x = date, y = value, colour = metric)) +
+  #   geom_line(size = 3, alpha = 0.5) +
+  #   facet_grid(metric ~ type, scales = "free_y")
   
   return(fit)
 }

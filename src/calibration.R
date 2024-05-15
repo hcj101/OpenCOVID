@@ -359,7 +359,7 @@ simulate_parameters = function(o, r_idx, param_ids) {
 # ---------------------------------------------------------
 # Calculate how well model output matches the fitting target
 # ---------------------------------------------------------
-quality_of_fit = function(o, fit, r_idx, do_plot = FALSE) {
+quality_of_fit = function(o, fit, r_idx, do_plot = FALSE) {login
   
   message("  > Calculating quality of fit")
   
@@ -428,6 +428,8 @@ quality_of_fit = function(o, fit, r_idx, do_plot = FALSE) {
 
     # Also cumulatively sum model output
     model_df = output_df %>%
+      mutate(date = as_date(date, origin = fit$opts$data_start), 
+             date = ceiling_date(date, fit$opts$data_period)) %>%
       group_by(param_id, round, seed, metric) %>%
       mutate(value = cumsum(value)) %>%
       ungroup() %>%

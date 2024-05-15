@@ -9,4 +9,6 @@ README.html
 config/my_options.yaml
 log/
 cache/
+!input/*
+!input/demo.yaml
 output/
