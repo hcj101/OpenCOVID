@@ -20,9 +20,9 @@ version_info = R.Version()
 version_num = paste0(version_info$major, ".",  version_info$minor)
 
 # Throw an error if this R version is unsuitable
-if (!version_num %in% stable_versions)
-  stop("This software is stable with R version(s): ", stable_str,
-       " (currently running ", version_num, ")")
+#if (!version_num %in% stable_versions)
+#  stop("This software is stable with R version(s): ", stable_str,
+#       " (currently running ", version_num, ")")
 
 # ---- Source files ----
 

@@ -1,0 +1,219 @@
+---
+
+# Example analysis file to run a demo OpenCOVID analysis
+  
+# ---- Baseline settings ----
+
+population_size: 100000
+        
+# Run all simulations for 500 days into the future
+n_days: 395
+n_days_init: -50
+
+# Initial conditions (sample from normal distribution)
+previously_infected:
+  uncertainty:
+    fn: "norm"  # Options: unif (min, max), norm (mean, sd), pois (lambda)
+    mean: 0.01
+    sd: 0.04
+
+# Number of days to shift seasonality start
+seasonality_shift: 150  # 0 represents mid-winter
+
+# Seasonality conditions (sample from normal distribution)
+#seasonality_scaler:
+#  uncertainty:
+#    fn: "norm"  # Options: unif (min, max), norm (mean, sd), pois (lambda)
+#    mean: 0.0
+#    sd: 0.04
+
+# Initiate future at some effective reporduction number
+Re: 2.0
+
+
+# Countries to pull network matrix data from
+contact_matrix_countries: UK  # ISO Alpha-2 country codes (en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+
+
+# ---- Priority and risk groups ----
+
+# Priority group definitions
+priority_groups: 
+- id: high_risk
+  name: "65+ or comorbidities"
+  priority: 1
+  condition: "age >= 65 | comorbidities == TRUE"
+- id: low_risk
+  name: "18-65 year olds"
+  priority: 2
+  condition: "age >= 18 & age < 65"
+  
+# Initiate novel variants
+#variants_novel:
+#- id: deltaplus
+##  name: "Delta+ (AY.4.2)"
+#  import_day: 50
+#  import_number: 0
+#  infectivity: 1.0
+#  severity: 1.0
+#  immuno_escape: 0.1
+#- id: epsilon
+#  name: "Epsilon"
+#  import_day: 100
+#  import_number: 0
+#  infectivity: 1.0
+#  severity: 1.0
+#  immuno_escape: 0.5
+
+# Primary vaccination rollout (use -ve for past dates, +ve for future dates)
+vaccine_rollout: 
+- id: high_risk
+  coverage: 0.0
+  start: 1800   # Date index for primary vaccination to begin
+  end: 1800     # Date index for primary vaccination to reach 'coverage'
+- id: low_risk
+  coverage: 0.0
+  start: 1500
+  end: 2000
+  
+# Vaccine booster rollout (only groups to recieve a booster need to be specified)
+#booster_rollout:
+#- id: high_risk
+#  probability: 0.0  # Probability of accepting/receiving a booster dose - set to zero in the baseline
+#  cycle_period: 180  # Booster dose administered every cycle_period days
+#  start: 3000         # When booster started to be available (-ve for past, +ve for future, 0 for start of analysis period)
+#  force_start: no    # Force a booster at this time regardless of when initial vaccination was (set to 'no' to turn off)
+#  force_end: no      # Force an end point to stop cyclic boosters (set to 'no' to turn off)
+#- id: low_risk
+#  probability: 0.0  # Probability of accepting/receiving a booster dose - set to zero in the baseline
+#  cycle_period: 365  # Booster dose administered every cycle_period days
+#  start: 1000         # When booster started to be available (-ve for past, +ve for future, 0 for start of analysis period)
+#  force_start: no    # Force a booster at this time regardless of when initial vaccination was (set to 'no' to turn off)
+#  force_end: no      # Force an end point to stop cyclic boosters (set to 'no' to turn off)
+  
+# Vaccine updates that effectively protect from exposure to all currently circulating variants
+#vaccine_update:
+#- id: next_gen_vax
+#  name: "2nd generation vaccine"
+#  release_day: no  # Set to integer to use
+
+# ---- Calibration settings ----
+  
+# Type of calibration to perform
+#
+# OPTIONS:
+#   Re_user: Value of 'Re' as set by the user
+#   Re_data: Value of 'Re' as defined by data
+#  epi_data: Fitting to temporal epidemiological data
+calibration_type: "epi_data"
+
+# Define parameters to be calibrated
+calibration_parameters:
+- param: "contacts"
+  lower: 2
+  upper: 20
+  synth: 12  # Used for generating synthetic data (to test fitting algorithm)
+
+# Additional options for Re_data and epi_data calibration
+calibration_options: 
+  data_synthetic: no
+  data_source:
+    epi: "UK"  # OPTIONS: 'ECDC' or 'UK'
+    Re: "ETH"  # OPTIONS: 'ECDC' or 'ETH'
+  country: UK
+  country_pop: 70000000
+  data_end: 2020-12-31
+  data_days: 300  # For epi_data only (Re_window used for Re_data)
+  data_burn_in: 30  # Number of days to simulate before data kicks in (for epi_data only)
+  offset_synthetic: 0.05  # Standard deviation for offseting synthetically generated data
+  
+# Time period to calibrate to (epi_data only)
+calibration_time_period: "week" # OPTIONS: "day", "week", "month", "quater", "year" 
+
+# Weights for epi_data calibration only (set metrics to 0 to turn off)
+calibration_weights:
+  time: "none"  # OPTIONS: 'none', 'weak', 'strong', 'exponential'
+  peak: "none"  # OPTIONS: 'none', 'weak', 'strong'
+  metric:
+    confirmed: 1.0
+    deaths: 1.0
+    hospital_admissions: 0.0
+    icu_admissions: 0.0
+    hospital_beds: 1.0
+    icu_beds: 1.0
+
+# Strength of objective function scaling
+objective_scaling: "none"  # OPTIONS: 'none', 'weak', or 'strong'
+
+# Emulator options
+emulator:
+  init_samples: 250       # Initial number of paramter sets
+  seeds: 8                # Number of stochastic runs per sample
+  test_train_split: 0.15  # Test-train split of samples (15-20% is reasonable)
+  gp_kernel: "Matern5_2"  # Select GP kernel function (see ?mleHetGP)
+  gp_max_iter: 1000       # Maximum number of iterations of GP algorithm
+
+# Adaptive sampling options
+#
+# NOTE: Adaptive sampling is very useful for fitting to epi_data - not so much for Re
+adaptive_sampling:
+  rounds: 1                   # Number of rounds (set to 0 to turn adaptive sampling off)
+  acquisition_points: 10000   # Number of randomly sampled points to evaluate for resampling
+  min_value_accepted: 0.0001  # Lower bound for expected improvment we'll consider
+  max_samples_accepted: 100   # Take at maximum n new parameter sets per round
+  
+# Optimisation options (for finding global minimum of emulated space)
+optimisation:
+  optim_runs: 20  # Number of times to perform optimisation
+  optim_iters: 100  # Number of ASD iterations
+  
+# Time period for fitting to Re
+Re_fit:
+  start_day: 10  # Start fitting from day n of simulations
+  n_days: 5      # Take the average over the next n days
+  
+
+
+# ---- Alternative scenarios ----
+
+# Define a few single scenarios and one array scenario
+scenarios:
+# Single scenario assessing impact of frequent booster doses
+- id: booster
+  name: "Frequent low-risk booster doses"
+  booster_rollout:
+  - id: low_risk
+    probability: 0.0
+    cycle_period: 180
+## Single scenario effect of an immuno-escaping variant
+- id: immuno_escape
+  name: "Immuno escape variant"
+  variants_novel:
+  - id: epsilon
+    import_day: 100
+    import_number: 0
+## Single scenario effect of an immuno-escaping variant with next generation vaccine
+#- id: vaccine_update
+#  name: "Next generation vaccine"
+#  variants_novel:
+#  - id: epsilon
+#    import_day: 100
+#    import_number: 0    
+#  vaccine_update:
+#  - id: next_gen_vax
+#    release_day: 1500
+# Array scenario assessing novel variant infectivty
+#- id: deltaplus_array
+#  name: "Delta+ variant"
+#  variants_novel:
+#  - id: deltaplus
+#    name: "Delta+ (AY.4.2)"
+#    import_number: 0
+#    infectivity:
+#      array_grid:
+#        id: inf
+#        name: "infectivity"
+#        from: 1.0
+#        to: 1.5
+#        by: 0.1
+
