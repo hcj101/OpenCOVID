@@ -858,7 +858,7 @@ fn_epi_update = function(m, p, ppl, date_idx, cost_units, states) {
 fn_transmission = function(m, p, ppl, network, epi_stats, date_idx) {
   
   # ---- Sample contacts considering NPIs ----
-  
+
   # NPI effect on at this time step
   npi_effect = p$npi_contact_reduction[date_idx]
   

@@ -48,6 +48,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   
   # API endpoint for national-level Oxford Stringency Index data
   o$osi_api = "https://covidtrackerapi.bsg.ox.ac.uk/api/v2/stringency/date-range/"
+  o$osi_data = "C://Users//helen//Documents//GitHub//OpenCOVID//src//data//osi.csv"
   
   # Data dictionary: UK indicators
   o$data_dict$uk = c(confirmed = "weekly_confirmed", 
@@ -143,7 +144,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$check_yaml_consistency = FALSE  # Should be more efficient to be a default check
   
   # Choose cluster partition for parallel jobs
-  o$cluster_partition = "lshtm" # OPTIONS: "covid19" or "scicore"
+  o$cluster_partition = "normal" # OPTIONS: "normal"
   
   # If running on scicore partition, you also need to define a job time 
   # 

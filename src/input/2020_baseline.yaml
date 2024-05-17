@@ -4,21 +4,29 @@
   
 # ---- Baseline settings ----
 
-population_size: 100000
+population_size: 10000
         
 # Number of days to simulate
-n_days: 200
-n_days_init: -50
+n_days: 366 # All 2020
+n_days_init: -31 #January 
 
 # Initial conditions (sample from normal distribution)
 previously_infected:
   uncertainty:
     fn: "norm"  # Options: unif (min, max), norm (mean, sd), pois (lambda)
-    mean: 0.1
-    sd: 0.04
+    mean: 0.005
+    sd: 0.01
 
 
-
+# Seasonality profile
+seasonality_fn: 
+  fn: "cospi"
+  x:
+    fn: "seq"
+    from: -1
+    to: 1
+    length.out: 365
+seasonality_scaler: 0.0 # Switch off seasonality
 # Number of days to shift seasonality start
 seasonality_shift: 150  # 0 represents mid-winter
 
@@ -32,8 +40,14 @@ seasonality_shift: 150  # 0 represents mid-winter
 # ---- Effective reproduction number ----
 
 # Effective reproduction number at analysis start
-Re: 2.0  # Can be calibrated in step 1 (set calibration_type: "Re_user" to use)
+Re: 4.5  # Can be calibrated in step 1 (set calibration_type: "Re_user" to use)
+# Transmission probability at maximum infecitivty, susceptibility, and seasonality
+beta: 0.006 # Arbitrary, but gives ~10 contacts for reasonable Re
 
+# Average number of contacts per person (placeholder)
+#
+# NOTE: This parameter is calibrated in most use cases (see calibration_parameters)
+contacts: 15.0
 
 # ---- Network structure ----
 
@@ -48,16 +62,16 @@ network_structure: "age"
 network_layers: household, school, workplace
 
 # Countries to pull network matrix data from
-contact_matrix_countries: BE  # ISO Alpha-2 country codes (en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+contact_matrix_countries: "United Kingdom"   # ISO Alpha-2 country codes (en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 
 # ---- Viral variants ----
 
 # Primary variant (properties relative to prognosis probabilities)
 variant_primary:
-  id: omicron
-  name: "Omicron"
-  infectivity: 14.4
-  severity: 1.54
+  id: initial
+  name: "Initial"
+  infectivity: 18.4
+  severity: 10.54
   immuno_escape: 0.0
   
   # Viral load profile
@@ -497,7 +511,7 @@ calibration_options:
   country: UK
   country_pop: 70000000
   data_end: 2020-12-31
-  data_days: 250  # For epi_data only (Re_window used for Re_data)
+  data_days: 335  # For epi_data only (Re_window used for Re_data)
   data_burn_in: 30  # Number of days to simulate before data kicks in (for epi_data only)
   offset_synthetic: 0.05  # Standard deviation for offseting synthetically generated data
   
@@ -545,7 +559,15 @@ optimisation:
 Re_fit:
   start_day: 10  # Start fitting from day n of simulations
   n_days: 5      # Take the average over the next n days
-  
+
+
+# ---- Other interventions ----
+
+# Non-pharmaceutical intervention effect
+# Set to 0 to turn off NPI effect
+npi_effect: 1  
+npi_scaler: 1 
+
 
 
 # ---- Alternative scenarios ----

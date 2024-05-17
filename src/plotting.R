@@ -1459,9 +1459,9 @@ plot_best_samples = function(o, fig_name, round_idx) {
   
   # Scale model output to per 100k people
   scaler   = 1e5 / fit$input$population_size
-  scale_df = fit$input$metrics$df %>% 
-    select(metric, scale) %>%
-    mutate(scaler = ifelse(scale, scaler, 1))
+ # scale_df = fit$input$metrics$df %>% 
+  #  select(metric, scale) %>%
+  #  mutate(scaler = ifelse(scale, scaler, 1))
   
   # Apply scaler, remove burn in phase, and cumulatively sum
   model_df = output_df %>%

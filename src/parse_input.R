@@ -136,8 +136,8 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   }
   
   # Throw an error if country codes are in not in ISO-2 format
-  if (any(sapply(y$contact_matrix_countries, nchar) != 2))
-    stop("Use ISO Alpha-2 country codes for 'contact_matrix_countries' parameters")
+  #if (any(sapply(y$contact_matrix_countries, nchar) != 2))
+  #  stop("Use ISO Alpha-2 country codes for 'contact_matrix_countries' parameters")
   
   # ---- Seasonality ----
   
@@ -348,15 +348,15 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   y$testing$mass_testing$when = parse_fn(fn_args = y$testing$mass_testing$when)
   
   # ---- NPI effect ----
-  
+  #browser()
   # Most basic case: NPI effect is a single value moving forward
-  if (is.numeric(y$npi_effect) && length(y$npi_effect) == 1) {
+ # if (is.numeric(y$npi_effect) && length(y$npi_effect) == 1) {
     
     # Convert to a vector - one value per time point
-    y$npi_effect = rep(y$npi_effect, y$n_days)
+#    y$npi_effect = rep(y$npi_effect, y$n_days)
     
     # Consider special case: load OCHI from OSI for given country
-  } else if ("fn" %in% names(y$npi_effect)) {
+#  } else if ("fn" %in% names(y$npi_effect)) {
     
     # Check there is internet connection before pulling for API
     # if (curl::has_internet())
@@ -368,8 +368,9 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
     
     # Filter for only this country
     osi_country = osi_df %>% 
-      filter(country_code == y$npi_effect$country) %>% 
-      arrange(date_value) %>%
+     # filter(country_code == y$npi_effect$country) %>% 
+      #arrange(date_value) %>%
+     # arrange(date) %>%
       mutate(day = 1 : n(), 
              stringency = stringency / 100) %>%
       select(day, stringency)
@@ -379,7 +380,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
       left_join(osi_country, by = "day") %>%
       fill(stringency) %>%
       pull(stringency)
-  }
+ # }
   
   # Multiply through by npi_scaler for reduction of contacts due to NPIs
   y$npi_contact_reduction = pmin(y$npi_effect * y$npi_scaler, 1)

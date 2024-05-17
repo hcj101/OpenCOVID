@@ -287,8 +287,8 @@ treat_products:
 
 # ---- Other interventions ----
 
-# Future non-pharmaceutical intervention effect
-npi_effect: 0  # Set to 0 to turn off NPI effect
+# Non-pharmaceutical intervention effect
+npi_effect: "fn"  # Set to 0 to turn off NPI effect
 npi_scaler: 1 
 
 # Testing and diagnosis

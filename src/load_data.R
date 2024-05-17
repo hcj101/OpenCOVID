@@ -135,7 +135,7 @@ load_epi = function(o, opts, fit, synthetic) {
 
   # Pull data from ECDC
   if (opts$data_source$epi == "ECDC") {
-    browser()
+    #browser()
     # Load raw case and death data from ECDC
     raw_data = read.csv(o$ecdc_api$cases, fileEncoding = "UTF-8-BOM")
     
@@ -422,6 +422,7 @@ pull_osi = function(o, y) {
   
   message("  > Pulling OSI data")
   
+  return()
   # Dates to load data for (only go as far as yesterday - we'll fill the rest)
   date_from = format_date(y$npi_effect$start)
   date_to   = min(date_from + y$n_days - 1, format_date(today() - 1))
