@@ -34,6 +34,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   
   # Overwrite any parameter defaults for which we have user-defined values 
   #
+
   # NOTE: A few sanity checks on the user-defined inputs are performed here
   list[y, u] = overwrite_defaults(y, y_user)
   
@@ -71,11 +72,31 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   n_days_total = y$n_days + n_days_init
   
   # ---- Demographics ----
+  # Sex
+  y$sex = c("male", "female")
+
   # Ethnic groups
-  y$sex = c("male", "female", "unknown")
-  
-  # Ethnic groups
-  y$ethnic_groups = c("white", "black", "asian", "white_black", "white_asian")
+  # Check if including ethnic groups
+  if (length(y$ethnic_groups) > 0) {
+  # Extract names of all ethnic groups we've defined
+    y$ethnic_id    = names(y$ethnic_groups)
+    y$ethnic_names =  y$ethnic_id 
+    
+    y$ethnic_prob = pull_ethnic(y)
+   
+    # Check we have probabilities for all specified groups
+   if (!all(names(y$ethnic_prob) %in% c("age", y$ethnic_names)))
+     stop("Unrequired ethnic groups in data file")
+    
+    # Also check there are no additional groups in data file to void summation errors
+  #  if (!any(y$ethnic_names) %in% names(y$ethnic_prob[,-1]))
+  #  stop("Some ethnic groups do not have specified proportions")
+    
+    y$ethnic_prob = y$ethnic_prob %>% 
+                    relocate(y$ethnic_names) %>% # Same order as specified in input file
+                    relocate(age, 1) 
+                    
+  }
   
   # Hardcode maximum upper age to 100
   age_max = 100
@@ -83,11 +104,11 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   # All ages modelled
   y$ages = 1 : age_max - 1L
   
-  # We're not yet interpolating between ages - throw an error if insufficiant age bins
+  # We're not yet interpolating between ages - throw an error if insufficient age bins
   if (length(y$demography) != age_max)
     stop("Single-year age bins must be provided from year 1 up to year ", age_max)
   
-  # Multiple age pyramid by population size to model
+  # Multiply age pyramid by population size to model
   y$demography = unlist(y$demography) / sum(unlist(y$demography))
   y$demography = round(y$demography * y$population_size)
   
@@ -108,6 +129,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   # Scale constant import of cases per 100,000
   y$import_constant = y$import_constant / 1e5
   
+ 
   # ---- Network ----
   
   # Sanity check on network structure
@@ -119,7 +141,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
     stop("Network 'layers' are currently under development", 
          " - these will be available in version 3.0")
   
-  # Convert comma-seperated string to vector of strings
+  # Convert comma-separated string to vector of strings
   y = str2vec(y, "network_layers")
   y = str2vec(y, "contact_matrix_countries")
   
@@ -322,6 +344,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
     
     # Remove all redundant items and store age-probability values
     y$risk_groups[[risk_group]] = risk_info[qc(id, probability)]
+  
   }
   
   # ---- Testing and diagnosis ----
@@ -348,8 +371,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   y$testing$mass_testing$when = parse_fn(fn_args = y$testing$mass_testing$when)
   
   # ---- NPI effect ----
-  #browser()
-  # Most basic case: NPI effect is a single value moving forward
+   # Most basic case: NPI effect is a single value moving forward
  # if (is.numeric(y$npi_effect) && length(y$npi_effect) == 1) {
     
     # Convert to a vector - one value per time point
@@ -683,7 +705,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   priority_groups = c(y$priority_groups$id, "none")
   
   # List of all possible metric groups, and their respective groups
-  y$count = list(ethnicity      = y$ethnic_groups,
+  y$count = list(ethnicity      = y$ethnic_id,
                  age            = y$ages, 
                  variant        = y$variants$id, 
                  infections     = 0 : y$max_infection_count, 
@@ -694,10 +716,11 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   # Dictionaries for number of infections and number of vaccine doses
   infections_dict = setNames(paste(y$count$infections, "infections"), y$count$infections)
   doses_dict      = setNames(paste(y$count$vaccine_doses, "doses"),   y$count$vaccine_doses)
-  
+ 
   # Dictionaries for variants, vaccine groups, and priority groups
   variant_dict  = setNames(y$variants$name, y$variants$id)
   vaccine_dict  = setNames(c(y$vaccine_update$name, "Unvaccinated"),        vaccine_groups)
+  ethnic_dict   = setNames(y$ethnic_name, y$ethnic_id)
   priority_dict = setNames(c(y$priority_groups$name, "Vaccine ineligible"), priority_groups)
   
   # Append to dict list (already contains metric names and IDs)
@@ -705,6 +728,7 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
                        infections      = infections_dict, 
                        vaccine_doses   = doses_dict, 
                        vaccine_type    = vaccine_dict, 
+                       ethnicity = ethnic_dict,
                        priority_group  = priority_dict)
   
   # ---- Final formatting ----
@@ -725,7 +749,7 @@ overwrite_defaults = function(y, y_overwrite) {
   
   # Scenario block field redundant once files have been loaded
   y_overwrite$scenario_block = NULL
-  
+
   # Sanity checks on user-defined inputs
   do_checks(y1 = y, y2 = y_overwrite)
   
@@ -1066,7 +1090,7 @@ parse_scenarios = function(o, y, scenario, read_array) {
       
       # Remove id and name items to leave only parameters to overwrite with
       y_scenario = list.remove(y$scenarios[[scenario_idx]], c("id", "name"))
-      
+      browser()
       # Use overwrite function to check and apply item values
       list[y, ] = overwrite_defaults(y, y_scenario)
     }

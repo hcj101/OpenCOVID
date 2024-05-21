@@ -13,7 +13,7 @@ all_new_infections:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Reporting of new COVID-19 cases each day (includes a reporting delay)
 confirmed:
@@ -24,7 +24,7 @@ confirmed:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Reporting of new COVID-19-related deaths each day (includes a reporting delay)
 deaths:
@@ -35,7 +35,7 @@ deaths:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Hospital (non-ICU) beds that are in use in any one day
 hospital_beds:
@@ -45,7 +45,7 @@ hospital_beds:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # ICU beds that are in use in any one day
 icu_beds:
@@ -55,7 +55,7 @@ icu_beds:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # New hospital (non-ICU) admissions each day (does not consider those leaving hospital)
 hospital_admissions:
@@ -66,7 +66,7 @@ hospital_admissions:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # New ICU admissions each day (does not consider those leaving ICU)
 icu_admissions:
@@ -77,7 +77,7 @@ icu_admissions:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Newly recovered people each day
 recovered:
@@ -88,7 +88,7 @@ recovered:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Newly occuring locally-transmitted infections each day
 new_local_infections:
@@ -99,7 +99,7 @@ new_local_infections:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # New imported infections each day
 new_importations:
@@ -110,7 +110,7 @@ new_importations:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Total number of people currently infected
 currently_infected:
@@ -120,7 +120,7 @@ currently_infected:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Total number of people currently infectious
 currently_infectious:
@@ -130,7 +130,7 @@ currently_infectious:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Total number of people currently infected with symptoms
 currently_symptomatic:
@@ -140,7 +140,7 @@ currently_symptomatic:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
 
 # Total number of people currently in isolation
 currently_isolated:
@@ -150,7 +150,7 @@ currently_isolated:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_type, vaccine_doses, variant
+  group_by:   none, age, ethnicity, priority_group, vaccine_type, vaccine_doses, variant
   
 # ---------------------------------------------------------
 # Population-level epidemiological metrics
@@ -249,7 +249,7 @@ n_vaccinated:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Cumulative number of people who have received all primary doses
 total_vaccinated:
@@ -259,7 +259,7 @@ total_vaccinated:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Number of doses administered per day, including booster doses
 n_doses:
@@ -270,7 +270,7 @@ n_doses:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_doses, vaccine_type
+  group_by:   none, age, ethnicity, priority_group, vaccine_doses, vaccine_type
 
 # Cumulative doses: equivalent to cumulative of n_doses
 total_doses:
@@ -280,7 +280,7 @@ total_doses:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group, vaccine_doses, vaccine_type
+  group_by:   none, age, ethnicity, priority_group, vaccine_doses, vaccine_type
 
 # Average number of vaccine and booster doses per person 
 # pop_n_doses:
@@ -300,7 +300,7 @@ vaccine_coverage:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Vaccine coverage among entire population
 vaccine_coverage_pop:
@@ -310,7 +310,7 @@ vaccine_coverage_pop:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Booster coverage: one or more boosters ever received among those vaccinated
 booster_coverage:
@@ -320,7 +320,7 @@ booster_coverage:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Booster coverage among entire population
 booster_coverage_pop:
@@ -330,7 +330,7 @@ booster_coverage_pop:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Booster coverage in past year among those vaccinated
 booster_coverage_12m:
@@ -340,7 +340,7 @@ booster_coverage_12m:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Booster coverage in past year among entire population
 booster_coverage_12m_pop:
@@ -350,7 +350,7 @@ booster_coverage_12m_pop:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Number of people receiving PrEP per day
 n_prep:
@@ -361,7 +361,7 @@ n_prep:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, ethnicity, age, priority_group
 
 # Cumulative version of the above
 total_prep:
@@ -371,7 +371,7 @@ total_prep:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Prep coverage among those eligible (ie those unsuitable for vaccination)
 prep_coverage:
@@ -381,7 +381,7 @@ prep_coverage:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Prep coverage across whole population
 prep_coverage_pop:
@@ -391,7 +391,7 @@ prep_coverage_pop:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # Total number of treatments per day: successful or not
 n_treat:
@@ -402,7 +402,7 @@ n_treat:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Cumulative version of the above
 total_treat:
@@ -412,7 +412,7 @@ total_treat:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Number of people successfully treated per day: a subset of those treated
 n_treat_success:
@@ -423,7 +423,7 @@ n_treat_success:
   aggregate:  yes
   cumulative: yes
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # Cumulative version of the above
 total_treat_success:
@@ -433,7 +433,7 @@ total_treat_success:
   aggregate:  yes
   cumulative: no
   scale:      yes
-  group_by:   none, age, priority_group
+  group_by:   none, age, ethnicity, priority_group
 
 # NOT YET IMPLEMENTED
 treatment_coverage:
@@ -443,7 +443,7 @@ treatment_coverage:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # NOT YET IMPLEMENTED
 treatment_coverage_pop:
@@ -453,7 +453,7 @@ treatment_coverage_pop:
   aggregate:  no
   cumulative: no
   scale:      no
-  group_by:   none, priority_group
+  group_by:   none, ethnicity, priority_group
 
 # ---------------------------------------------------------
 # Demographic metrics

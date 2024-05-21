@@ -39,11 +39,15 @@ run_results = function(o) {
     # Plot virus variants - area plot
     fig_name = c("Baseline", "Variants")
     plot_temporal(o, fig_name, plot_by = "variant", plot_geom = "area")
-
+    
     # Plot age groups
     fig_name = c("Baseline", "Age groups")
     plot_temporal(o, fig_name, plot_by = "age", plot_geom = "area")
-
+    
+    # Plot ethnicity
+    fig_name = c("Baseline", "Ethnicity")
+    plot_temporal(o, fig_name, plot_by = "ethnicity", plot_geom = "area")
+    
     # Plot vaccine and treatment priority groups
     fig_name = c("Baseline", "Priority groups")
     plot_temporal(o, fig_name, plot_by = "priority_group", plot_geom = "area")

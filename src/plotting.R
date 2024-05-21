@@ -895,7 +895,7 @@ plot_heatmap = function(o, fig_name, ...) {
   # Initiate ggplot
   g = ggplot(plot_df, aes(x = x, y = y))
   
-  # Set factets if more than 2 dimensions
+  # Set facets if more than 2 dimensions
   if (n_dims == 3) g = g + facet_wrap(~w,  labeller = f$label_wrap)
   if (n_dims == 4) g = g + facet_grid(w~v, labeller = f$label_grid)
   

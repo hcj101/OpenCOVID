@@ -50,6 +50,9 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$osi_api = "https://covidtrackerapi.bsg.ox.ac.uk/api/v2/stringency/date-range/"
   o$osi_data = "C://Users//helen//Documents//GitHub//OpenCOVID//src//data//osi.csv"
   
+  # Ethnic group proportions by age
+  o$ethnic_age = "C://Users//helen//Documents//GitHub//OpenCOVID//src//data//ethnic_age.csv"
+  
   # Data dictionary: UK indicators
   o$data_dict$uk = c(confirmed = "weekly_confirmed", 
                        deaths  = "weekly_deaths",
@@ -187,8 +190,9 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$palette_scenario = "pals::cols25"
   o$palette_metric   = "pals::kovesi.rainbow"
   
-  # Colour packages and palettes for groupings (see colour_scheme in myRfunctions.R)
+  # Colour packages and palettes for groupings (see colour_scheme in auxiliary.R)
   o$palette_age     = "brewer::set2"
+  o$palette_ethnicity     = "brewer::set2"
   o$palette_variant = "brewer::set3"
   o$palette_priority_group = "brewer::accent"
   o$palette_vaccine_type   = "brewer::dark2"

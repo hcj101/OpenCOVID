@@ -79,7 +79,7 @@ load_epi = function(o, opts, fit, synthetic) {
   
   # Load data from UK (ONS & PHE)
   if (opts$data_source$epi == "UK") {
-   browser()
+  
     # Load full epi data file for England. NB Not currently including other 3 nations
     raw_data = read.csv(o$uk_data, fileEncoding = "UTF-8-BOM")
     
@@ -422,7 +422,6 @@ pull_osi = function(o, y) {
   
   message("  > Pulling OSI data")
   
-  return()
   # Dates to load data for (only go as far as yesterday - we'll fill the rest)
   date_from = format_date(y$npi_effect$start)
   date_to   = min(date_from + y$n_days - 1, format_date(today() - 1))
@@ -439,3 +438,16 @@ pull_osi = function(o, y) {
   saveRDS(osi_df, file = paste0(o$pth$cache, "osi.rds"))  
 }
 
+# ---------------------------------------------------------
+# Pull ethnic group allocations by age
+# ---------------------------------------------------------
+pull_ethnic = function(y) {
+  
+  message("  > Pulling ethnic group proportions by age")
+ 
+  # Load cumulative ethnic group proportions for England by single year of age
+  ethnic_prop = read.csv(o$ethnic_age, fileEncoding = "UTF-8-BOM")
+  names(ethnic_prop) = tolower(names(ethnic_prop))
+  
+  return(ethnic_prop)
+}

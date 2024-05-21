@@ -423,17 +423,22 @@ durations:
 # ---- Demography ----
 # Sex
 p_sex:
-  male: 0.495
-  female: 0.495
-  unknown: 0.01
-  
-# Ethnic groups
-p_ethnic_groups:
-  white: 0.82
-  black: 0.04
-  asian: 0.11
-  white_black: 0.02
-  white_asian: 0.01
+  male: 0.5
+  female: 0.5
+
+#Ethnic groups
+ethnic_groups: 
+- id: white
+  name: "White"
+- id: black
+  name: "Black"
+- id: asian
+  name: "Asian"
+- id: mixed
+  name: "Mixed"
+- id: other
+  name: "Other" 
+ 
   
 # Age-related probabiliy of non-COVID 'natural' death
 natural_death_age:

@@ -5,7 +5,13 @@
 # ---- Baseline settings ----
 
 population_size: 10000
-        
+
+# Sex
+p_sex:
+  male: 0.5
+  female: 0.5
+
+
 # Number of days to simulate
 n_days: 366 # All 2020
 n_days_init: -31 #January 
@@ -40,9 +46,9 @@ seasonality_shift: 150  # 0 represents mid-winter
 # ---- Effective reproduction number ----
 
 # Effective reproduction number at analysis start
-Re: 4.5  # Can be calibrated in step 1 (set calibration_type: "Re_user" to use)
+Re: 4.0  # Can be calibrated in step 1 (set calibration_type: "Re_user" to use)
 # Transmission probability at maximum infecitivty, susceptibility, and seasonality
-beta: 0.006 # Arbitrary, but gives ~10 contacts for reasonable Re
+beta: 0.03 # Arbitrary, but gives ~10 contacts for reasonable Re
 
 # Average number of contacts per person (placeholder)
 #
@@ -70,9 +76,19 @@ contact_matrix_countries: "United Kingdom"   # ISO Alpha-2 country codes (en.wik
 variant_primary:
   id: initial
   name: "Initial"
-  infectivity: 18.4
-  severity: 10.54
+  infectivity: 1.0
+  severity: 1.0
   immuno_escape: 0.0
+  
+# Novel variant properties (properties relative to primary variant)
+variants_novel: 
+- id: alpha
+  name: "Alpha"
+  import_day: 270
+  import_number: 50 # Set import_number to zero to turn off novel variant importation. Specify as import rate per 100,000
+  infectivity: 5.0
+  severity: 2.0
+  immuno_escape: 0.2
   
   # Viral load profile
 viral_load_infectivity: yes
@@ -138,7 +154,7 @@ death_critical_icu: 1.0
 death_critical_non_icu: 3.0
 
 # Probability of seeking care if severe
-seek_hospital: 0.75
+seek_hospital: 0.9
 
 # Per exposure risk scaler for ICU and death (assumed to not wane over time)
 #
@@ -355,7 +371,7 @@ vaccine_rollout:
 model_metrics:
   all_new_infections:
     report: yes
-    by: age, priority_group, vaccine_type, variant
+    by: age, priority_group, ethnicity, vaccine_type, variant
   new_local_infections:
     report: no
     by: none
@@ -367,16 +383,16 @@ model_metrics:
     by: none
   deaths:
     report: yes
-    by: priority_group, vaccine_type, vaccine_doses, variant
+    by: age, ethnicity,priority_group, vaccine_type, vaccine_doses, variant
   hospital_beds:
     report: yes
-    by: priority_group, vaccine_type, vaccine_doses
+    by: age, ethnicity, priority_group, vaccine_type, vaccine_doses
   hospital_admissions:
     report: no
     by: none
   icu_beds:
     report: yes
-    by: priority_group, vaccine_type, vaccine_doses
+    by: age, ethnicity, priority_group, vaccine_type, vaccine_doses
   icu_admissions:
     report: no
     by: none

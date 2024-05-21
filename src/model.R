@@ -46,7 +46,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   # Initialise infections/vaccinations
   ppl_df = initiate_epidemic(p, ppl_df)
   
-  # Calculate number of people in each vaccine prioirty group outside of main loop
+  # Calculate number of people in each vaccine priority group outside of main loop
   n_priority_group = ppl_df %>%
     count(priority_group) %>%
     left_join(p$priority_groups[, .(id, priority)], 
@@ -191,7 +191,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
 # Generate ppl datatable by creating new individuals
 # ---------------------------------------------------------
 create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
-  
+ 
   # Number of new people to create (on initial call use population_size)
   if (init == TRUE) n = p$population_size
   
@@ -202,7 +202,7 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   # Display (or not) have many people we are creating
   if (verbose != "none")
     message("  > Initiating population of ", thou_sep(n))
-  
+
   # Initiate new datatable
   ppl = data.table()
   
@@ -221,12 +221,6 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   
   # Apply sex
   ppl[, sex := sample_sex]
- 
-  # Sample ethnicity
-  sample_ethnicity = sample_vec(x = p$ethnic_groups,  size = n, replace = TRUE, prob = p$p_ethnic_groups)
-
-  # Apply ethnicity
-  ppl[, ethnicity := sample_ethnicity]
   
   # Sample ages from some distribution and a birthday index
   sample_ages = sample_vec(x = p$ages,  size = n, replace = TRUE, prob = p$demography)
@@ -239,6 +233,21 @@ create_ppl = function(p, n = NULL, init = TRUE, verbose = "none") {
   # Apply birthday index - do not use 0 for newborns to stagger ageing
   ppl[, birthday := sample_bday]
   
+  # ---- Assign ethnic group ----
+  # Sample ethnicity
+  sample_ethnicity = p$ethnic_prob[ppl[, age] + 1, ] %>%
+                     mutate(rand  = runif(n()),
+                            ethnic_group = case_when(rand <= .[[2]] ~ p$ethnic_name[1],
+                                                     rand > .[[2]] & rand <= (.[[2]] + .[[3]]) ~ p$ethnic_name[2],
+                                                     rand > (.[[2]] + .[[3]]) & rand <= (.[[2]] + .[[3]]+ .[[4]]) ~ p$ethnic_name[3],
+                                                     rand > (.[[2]] + .[[3]]+ .[[4]]) & rand <= (.[[2]] + .[[3]] + .[[4]] + .[[5]]) ~ p$ethnic_name[4],
+                                                     rand > (.[[2]] + .[[3]]+ .[[4]] + .[[5]]) & rand <= (.[[2]] + .[[3]] + .[[4]] + .[[5]] + .[[6]]) ~ p$ethnic_name[5],
+                                                    .default = "test"))
+                         
+    
+    # Apply ethnicity
+    ppl[, ethnicity := sample_ethnicity$ethnic_group]
+    
   # ---- Assign risk groups ----
   
   # Sanity check that all defined risk groups are able to modelled
@@ -467,7 +476,7 @@ preallocate_output = function(p) {
   
   # Preallocate output
   m = list()
-  
+
   # Easy access metric info datatable
   metrics = p$metrics$df
   
@@ -971,7 +980,7 @@ fn_emergence = function(m, p, ppl, epi_stats, id, date_idx) {
   
   # Check whether any variants are due to be imported in this time step
   if (date_idx %in% p$variants$import_day) {
-    
+  
     # Details of the variant to be imported
     this_variant = p$variants[p$variants$import_day == date_idx, ]
     
@@ -992,12 +1001,13 @@ fn_emergence = function(m, p, ppl, epi_stats, id, date_idx) {
       # Extend the people we can choose from to 'reassign' the new variant to
       newly_infected_id = c(newly_infected_id, newly_forced_id)
     }
-    
+  
     # Sample this many people from those recently infected 
-    id$new_variant = sample_vec(newly_infected_id, this_variant$import_number)
-    
+    id$new_variant = sample_vec(x=newly_infected_id, size=this_variant$import_number)
+    sample_these = id$new_variant
+  
     # Assign the new mutation variant to these individuals
-    ppl[id$new_variant, variant := this_variant$id]
+    ppl[sample_these, variant := this_variant$id]
     
   } else { # No viral emergence on this day...
     

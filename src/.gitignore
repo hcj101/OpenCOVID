@@ -1,8 +1,8 @@
 .Rproj.user
 .Rhistory
 *.nfs*
-*.RDS
 *.rds
+*.RDS
 core*
 README.html
 /my_results.R

@@ -85,6 +85,11 @@ run_model_test = function(o, scenario = "baseline", rerun = TRUE) {
   fig_name = c("Test simulation", scenario, "Age")
   plot_temporal(o, fig_name, plot_file = result, alt_baseline = scenario,
                 plot_by = "age", plot_geom = "area")
+  
+  # Plot metrics by ethnicity
+  fig_name = c("Test simulation", scenario, "Ethnicity")
+  plot_temporal(o, fig_name, plot_file = result, alt_baseline = scenario,
+                plot_by = "ethnicity", plot_geom = "area")
 
   # Plot metrics by priority group
   fig_name = c("Test simulation", scenario, "Priority groups")

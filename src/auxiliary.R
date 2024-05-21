@@ -98,7 +98,7 @@ colour_scheme = function(map, pal = NULL, n = 1, ...) {
   if (map == "viridis")
     colours = viridis_pal(option = pal, ...)(n)
   
-  # Throw an error if colours not yetr defined
+  # Throw an error if colours not yet defined
   if (is.null(colours))
     stop("Colour map '", map, "' not recognised (supported: base, pals, hcl, brewer, viridis)")
   
