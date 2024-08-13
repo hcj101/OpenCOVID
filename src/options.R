@@ -28,12 +28,19 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$user = Sys.info()[["user"]]
   
   # Name of analysis to run (cannot contain period symbol)
-  o$analysis_name = "demo"
+  o$analysis_name = "ireland"
   
   # Set analysis name and create output directory system
   o = set_dirs(o)  # See directories.R
   
   # ---- Data references ----
+  
+  # RespiCompass data links
+  o$respicompass_api = 
+    list(icu_admissions = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological//ICUadmissions.csv", 
+         hospital_admissions  = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological/hospitaladmissions.csv",
+         deaths = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological//deaths.csv",
+         cases = "C://Users//helen//Documents//GitHub//respinea//src//data//miscellaneous//detections//pathogen_detection.csv")
   
   # ECDC data links
   o$ecdc_api = 

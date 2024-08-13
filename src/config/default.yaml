@@ -561,16 +561,16 @@ model_metrics:
     report: yes
     by: priority_group, vaccine_type, vaccine_doses, variant
   hospital_beds:
-    report: yes
+    report: no
     by: priority_group, vaccine_type, vaccine_doses
   hospital_admissions:
-    report: no
+    report: yes
     by: none
   icu_beds:
-    report: yes
+    report: no
     by: priority_group, vaccine_type, vaccine_doses
   icu_admissions:
-    report: no
+    report: yes
     by: none
   currently_infected:
     report: yes

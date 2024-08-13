@@ -27,7 +27,7 @@ load_data = function(o, fit, synthetic = NULL) {
     # Identify data source regardless of capitalisation
     opts$data_source = lapply(opts$data_source, toupper)
     
-    # Load epi data regardless of what we're fititng to
+    # Load epi data regardless of what we're fitting to
     fit = load_epi(o, opts, fit, synthetic)
     
     # Load Re estimates if necessary (may or may not use epi data)
@@ -56,7 +56,7 @@ load_data = function(o, fit, synthetic = NULL) {
 }
 
 # ---------------------------------------------------------
-# Load emperical epidemiological data from source (or generate synthetic data)
+# Load empirical epidemiological data from source (or generate synthetic data)
 # ---------------------------------------------------------
 load_epi = function(o, opts, fit, synthetic) {
   
@@ -73,11 +73,11 @@ load_epi = function(o, opts, fit, synthetic) {
   # Otherwise load empirical epidemiological data...
   message(" - Loading epi data: ", opts$data_source$epi)
   
-  # ---- Source: ECDC ----
-  
   # All dates we're interested in
   dates_df = get_data_dates(opts)
-  
+ 
+  # ---- Source: ECDC ----
+
   # Pull data from ECDC
   if (opts$data_source$epi == "ECDC") {
     
@@ -155,10 +155,114 @@ load_epi = function(o, opts, fit, synthetic) {
       stop("Negative data values identified")
   }
   
-  # Apply pop scaler to every epi metric (-> per 100,000 people)
-  fit$data[, value := value / scale_pop]
+# ---- Source: RespiCompass ----
+# See https://github.com/european-modelling-hubs/RespiCompass for details
+# TODO Read in testing data and calculate positivity
   
-  return(fit)
+# TODO Consider age-specific 
+  
+# Pull data from RespiCompass
+if (opts$data_source$epi == "RESPICOMPASS") {
+  
+  # Load raw deaths data from RespiCompass
+  raw_data = read.csv(o$respicompass_api$deaths)
+  
+  # Select only columns of interest and convert dates to R-interpretable
+  data_deaths = raw_data %>%
+    filter(indicator == "deaths",
+           age == "total") %>%
+    select(date      = week_end_date,
+           deaths = value,
+           country   = iso2_code) %>%
+    filter(country == opts$country) %>% 
+    select(-country) %>%
+    mutate(date = format_date(date)) %>%
+    # Keep only dates of interest and melt down...
+    right_join(y  = dates_df,
+               by = "date") %>%
+    pivot_longer(cols = c(-date, -day), 
+                 names_to = "metric") %>%
+    arrange(metric, date) %>%
+    filter(!is.na(value)) %>%
+    # Summarise time period if desired...
+    change_time_period(dates_df, opts$data_period) %>%
+    setDT()
+  
+  # Throw error if no death data for this country
+  if (nrow(data_deaths) == 0)
+    stop("No RespiCompass death data found for country '", opts$country)
+  
+  # Load raw hospital admissions data from RespiCompass
+  raw_data = read.csv(o$respicompass_api$hospital_admissions, fileEncoding = "UTF-8-BOM")
+  
+  # Select only columns of interest and convert dates to R-interpretable
+  data_hosp_admissions = raw_data %>%
+    filter(indicator == "hospitaladmissions",
+           age == "total",
+           survtype == "non-sentinel") %>%
+    select(date  = week_end_date,
+          country   = iso2_code,
+          value) %>%
+    filter(country == opts$country) %>%
+    select(-country) %>%
+    mutate(date = format_date(date),
+           metric = "hospital_admissions") %>%
+    # Keep only dates of interest 
+    right_join(y  = dates_df,
+               by = "date") %>%
+    arrange(date) 
+  
+  # Load raw icu admissions data from RespiCompass
+  raw_data = read.csv(o$respicompass_api$icu_admissions, fileEncoding = "UTF-8-BOM")
+  
+  # Select only columns of interest and convert dates to R-interpretable
+  data_icu_admissions = raw_data %>%
+    filter(indicator == "ICUadmissions",
+           age == "total",
+           survtype == "non-sentinel") %>%
+    select(date  = week_end_date,
+           country   = iso2_code,
+           value) %>%
+    filter(country == opts$country) %>%
+    select(-country) %>%
+    mutate(date = format_date(date),
+          metric = "icu_admissions") %>%
+    # Keep only dates of interest 
+    right_join(y  = dates_df,
+               by = "date") %>%
+    arrange(date) 
+    
+    # Combine hospital and ICU admissions data
+   data_hospital = full_join(data_hosp_admissions,
+                             data_icu_admissions) %>%
+                   filter(!is.na(value)) %>%
+    # Summarise time period if desired...
+    change_time_period(dates_df, opts$data_period) %>%
+    setDT()
+  
+  # Throw an error if any unknown data metrics are present 
+  unknown_metrics = setdiff(unique(data_hospital$metric), names(o$data_dict$ecdc))
+  if (length(unknown_metrics) > 0)
+    stop("Unknown data variables for country ", opts$country, 
+         ": ", paste(unknown_metrics, collapse = ", "))
+  
+  # Throw warning if no hospital data for this country
+  if (nrow(data_hospital) == 0)
+    warning("No RespiCompass hospital data found for country ", opts$country)
+  
+  # Filter dates of interest for fitting and plotting
+  fit$data = rbind(data_deaths, data_hospital)
+
+  # Check no data is negative
+  if (any(fit$data$value < 0))
+    stop("Negative data values identified")
+}
+  
+# Apply pop scalar to every epi metric (-> per 100,000 people)
+scale_pop = opts$country_pop / 1e5
+fit$data[, value := value / scale_pop]
+
+return(fit)
 }
 
 # ---------------------------------------------------------

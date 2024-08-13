@@ -24,10 +24,10 @@ run_calibration = function(o) {
   
   # Initiate fit list and perform a few checks on input yaml
   fit = setup_calibration(o)
-  
+
   # Load data - see load_data.R
   fit = load_data(o, fit, fit$synthetic)
-  
+
   # ---- Main adaptive sampling loop ----
   
   # Iterate through adaptive sampling rounds (including initial 'r0' step)

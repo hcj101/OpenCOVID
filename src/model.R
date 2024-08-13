@@ -29,7 +29,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   
   # Load and parse user-defined inputs for this scenario
   yaml = parse_yaml(o, scenario, fit = fit, uncert = uncert, read_array = TRUE)
-  
+
   # Shorthand for model parameters
   p = yaml$parsed
   

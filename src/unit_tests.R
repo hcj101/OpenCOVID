@@ -38,7 +38,7 @@ run_model_test = function(o, scenario = "baseline", rerun = TRUE) {
                    do_plot = FALSE,
                    verbose = "bar")
     
-    # Aggregative and summarise raw model output (see postprocess.R)
+    # Aggregate and summarise raw model output (see postprocess.R)
     result = process_results(result, result$output)
     
     # Save result as an RDS file

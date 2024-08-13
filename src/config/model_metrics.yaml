@@ -59,7 +59,7 @@ icu_beds:
 
 # New hospital (non-ICU) admissions each day (does not consider those leaving hospital)
 hospital_admissions:
-  label:     "COVID-19 hospital admissions per day"
+  label:     "COVID-19 hospital admissions per week"
   label_cum: "Cumulative COVID-19 hospital admissions"
   temporal:   yes
   coverage:   no
@@ -70,7 +70,7 @@ hospital_admissions:
 
 # New ICU admissions each day (does not consider those leaving ICU)
 icu_admissions:
-  label:     "COVID-19 ICU admissions per day"
+  label:     "COVID-19 ICU admissions per week"
   label_cum: "Cumulative COVID-19 ICU admissions"
   temporal:   yes
   coverage:   no
