@@ -17,7 +17,7 @@ load_data = function(o, fit, synthetic = NULL) {
     
     # Extract subset of inputs relevant for loading appropriate data
     opts = c(type = fit$input$calibration_type, fit$input$calibration_options)
-    
+    browser()
     # Append country codes (converted from ISO2) using countrypackage package
     #
     # NOTE: countrycode is installed as a dependency of socialmixr
@@ -478,7 +478,7 @@ pull_osi = function(o, y) {
   # Construct call to API endpoint and convert to json format
   api_call = paste0(o$osi_api, date_from, "/", date_to)
   api_data = fromJSON(rawToChar(httr::GET(api_call)$content))
-  
+
   # Data is horribly hidden, a few lapply's needed to extract what we need
   osi_fn = function(x) rbindlist(lapply(x, as.data.table), fill = TRUE)
   osi_df = rbindlist(lapply(api_data$data, osi_fn), fill = TRUE)

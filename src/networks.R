@@ -317,26 +317,48 @@ create_residual = function(p, ppl, elist) {
 # Create standalone, basic small-world, age-structured network
 # ---------------------------------------------------------
 create_age = function(p, ppl) {
-  
+ 
   # Load POLYMOD contact matrix (single ages bins by default)
-  polymod_matrix = load_polymod(p)$matrix
-  
+  # polymod_matrix = load_polymod(p)$matrix
+  prem_matrix = load_prem(p)$matrix
+ 
   # Extract the age groups that were created by socialmixr, usually the oldest individuals are lumped together
-  polymod_age_groups = 1 : length(names(polymod_matrix))
+  #polymod_age_groups = 1 : length(names(polymod_matrix))
+  prem_age_groups = 1 : length(names(prem_matrix))
   
   # Temporarily append an age_group variable in ppl, to later sample ID's according to age group
-  ppl[, age_group := min(which(p$ages == age[1]), length(polymod_age_groups)), by = list(age)]
-  
+   #ppl[, age_group := min(which(p$ages == age[1]), length(polymod_age_groups)), by = list(age)]
+   ppl = ppl %>% mutate(age_group = case_when(age %in% seq(0,4)  ~ 1,
+                                             age %in% seq(5,9)   ~ 2,
+                                             age %in% seq(10,14) ~ 3,
+                                             age %in% seq(15,19) ~ 4,
+                                             age %in% seq(20,24) ~ 5,
+                                             age %in% seq(25,29) ~ 6,
+                                             age %in% seq(30,34) ~ 7,
+                                             age %in% seq(35,39) ~ 8,
+                                             age %in% seq(40,44) ~ 9,
+                                             age %in% seq(45,49) ~ 10,
+                                             age %in% seq(50,54) ~ 11,
+                                             age %in% seq(55,59) ~ 12,
+                                             age %in% seq(60,64) ~ 13,
+                                             age %in% seq(65,69) ~ 14,
+                                             age %in% seq(70,74) ~ 15,
+                                             age %in% seq(75,110) ~ 16,
+                                             .default = NA))
+
   # How many individuals per age group have we created? Using data.tables .N variable and order by age_group
   created_demog = ppl[order(age_group), .N, by = list(age_group)]$N
   
   # Multiply the contact matrix by the demography counts and unlist to sample later. Unlist works by column
-  contact_probs = unlist(polymod_matrix[, Map("*", .SD, created_demog)], use.names = FALSE)
+ # contact_probs_polymod = unlist(polymod_matrix[, Map("*", .SD, created_demog)], use.names = FALSE)
+  contact_probs = unlist(prem_matrix[, Map("*", .SD, created_demog)], use.names = FALSE)
   contact_probs[is.na(contact_probs)] = 0
   
   # Create ego_cell and alter_cell vectors to get cell identities
-  ego_cell   = rep(1 : length(polymod_age_groups), each  = length(polymod_age_groups))
-  alter_cell = rep(1 : length(polymod_age_groups), times = length(polymod_age_groups))
+  #ego_cell   = rep(1 : length(polymod_age_groups), each  = length(polymod_age_groups))
+  #alter_cell = rep(1 : length(polymod_age_groups), times = length(polymod_age_groups))
+  ego_cell   = rep(1 : length(prem_age_groups), each  = length(prem_age_groups))
+  alter_cell = rep(1 : length(prem_age_groups), times = length(prem_age_groups))
   
   # Pre-allocate edgelist
   n_contacts   = round(p$population_size * p$contacts / 2)
@@ -442,16 +464,16 @@ age_correction_factor = function(p, ppl, elist) {
 }
 
 # ---------------------------------------------------------
-# Load POLYMOD contact matrix (single ages bins by default)
+# Load POLYMOD contact matrix (single age bins by default)
 # ---------------------------------------------------------
 load_polymod = function(p, age_bins = p$ages) {
   
   # Create contact matrix from socialmixr
   #
-  # NOTE: The contact_matrix function complains when all_ages are not consistent with it's data, however it performs
+  # NOTE: The contact_matrix function complains when all_ages are not consistent with its data, however it performs
   #       interpolation between ages to prevent data loss. We therefore justify the use of suppressWarnings here.
   polymod_data = contact_matrix(survey     = polymod, 
-                                countries  = p$contact_matrix_countries, 
+                                countries  = c("Italy"), #p$contact_matrix_countries, 
                                 age.limits = age_bins, 
                                 symmetric  = TRUE) %>% suppressWarnings()#, 
                                # quiet      = TRUE) %>% suppressWarnings()
@@ -461,5 +483,24 @@ load_polymod = function(p, age_bins = p$ages) {
                  pop_size = polymod_data$demography$population)
   
   return(polymod)
+}
+
+# ---------------------------------------------------------
+# Load synthetic contact matrix (Prem 2021)
+# https://github.com/kieshaprem/synthetic-contact-matrices/tree/master/generate_synthetic_matrices/output
+# ---------------------------------------------------------
+load_prem = function(p, age_bins = p$ages) {
+  load("C:/Users/helen/Downloads/contact_all.rdata")
+ 
+  # Extract synthetic contact matrix for target country (converting ISO2 to ISO3)
+  country_ISO3 = countrycode::countrycode(p$contact_matrix_countries, "iso2c", "iso3c")
+  country_num = grep(country_ISO3, names(contact_all))
+  prem_data = contact_all[[country_num]]
+    
+  # Convert matrix to datatable and store along with age group pop sizes
+  prem = list(matrix   = data.table(prem_data), 
+                 pop_size = rep(NA, nrow(prem_data)))
+  
+  return(prem)
 }
 
