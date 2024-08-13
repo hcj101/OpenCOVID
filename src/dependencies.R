@@ -8,7 +8,7 @@
 # ---- R version check ----
 
 # R versions for which this project has been tested and is stable
-stable_versions = "4.1.0"
+stable_versions = "4.3.0"
 
 # R versions for which this project is stable (as a string)
 stable_str = paste(stable_versions, collapse = ", ")
@@ -20,9 +20,9 @@ version_info = R.Version()
 version_num = paste0(version_info$major, ".",  version_info$minor)
 
 # Throw an error if this R version is unsuitable
-if (!version_num %in% stable_versions)
-  stop("This software is stable with R version(s): ", stable_str,
-       " (currently running ", version_num, ")")
+#if (!version_num %in% stable_versions)
+#  stop("This software is stable with R version(s): ", stable_str,
+#       " (currently running ", version_num, ")")
 
 # ---- Source files ----
 
@@ -109,7 +109,7 @@ packages = c("tidyverse",      # Includes ggplot2, dplyr, tidyr (www.tidyverse.o
 gh_packages = c("eliocamp/tagger")
 
 # List of python packages (and associated modules) to be installed
-py_packages = c("pyyaml::yaml")
+#py_packages = c("pyyaml::yaml")
 
 # ---- Install and/or load R packages with pacman ----
 
@@ -137,33 +137,33 @@ pacman::p_load_gh(gh_packages)
 # use_condaenv("r-reticulate")
 
 # Skip this step if no python packages needed
-if (length(py_packages) > 0) {
+#if (length(py_packages) > 0) {
   
-  message("* Installing required python packages")
+ # message("* Installing required python packages")
   
   # Split package and module names
-  py_modules = str_split(py_packages, "::", simplify = TRUE)
-  py_modules = setNames(py_modules[, 2], py_modules[, 1])
+#  py_modules = str_split(py_packages, "::", simplify = TRUE)
+ # py_modules = setNames(py_modules[, 2], py_modules[, 1])
   
   # Loop through modules
-  for (i in seq_along(py_modules)) {
+#  for (i in seq_along(py_modules)) {
     
     # This module from this package
-    py_module  = py_modules[i] %>% unname()
-    py_package = py_modules[i] %>% names()
+ #   py_module  = py_modules[i] %>% unname()
+  #  py_package = py_modules[i] %>% names()
     
     # Only install package if module is not available
-    if (!py_module_available(py_module))
-      reticulate::conda_install("r-reticulate", py_package)
+   # if (!py_module_available(py_module))
+    #  reticulate::conda_install("r-reticulate", py_package)
     
     # Import the module
-    reticulate::import(py_module)
-  }
+    #reticulate::import(py_module)
+  #}
   
   # Now ready to source all python files 
-  for (py_file in py_source)
-    reticulate::source_python(py_file)
-}
+  #for (py_file in py_source)
+   # reticulate::source_python(py_file)
+#}
 
 # ---- Redefine or unmask particular functions ----
 

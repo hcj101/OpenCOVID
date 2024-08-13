@@ -8,7 +8,7 @@ population_size: 100000
         
 # Run all simulations for 500 days into the future
 n_days: 200
-n_days_init: -730
+n_days_init: -365
 
 # Initial conditions (sample from normal distribution)
 previously_infected:
@@ -24,8 +24,8 @@ seasonality_shift: 150  # 0 represents mid-winter
 seasonality_scaler:
   uncertainty:
     fn: "norm"  # Options: unif (min, max), norm (mean, sd), pois (lambda)
-    mean: 0.3
-    sd: 0.04
+    mean: 0.0
+    sd: 0.0
 
 # Initiate future at some effective reporduction number
 Re: 1.05

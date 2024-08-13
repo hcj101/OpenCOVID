@@ -6,10 +6,10 @@
 ###########################################################
 
 # ---------------------------------------------------------
-# Store uncertainty parameters in seperate list, denoted u
+# Store uncertainty parameters in separate list, denoted u
 # ---------------------------------------------------------
 parse_uncertainty = function(o, y, u = NULL) {
-  
+ 
   # Initiate u list if it doesn't current exist
   if (is.null(u)) u = list()
   
@@ -92,7 +92,7 @@ sample_uncertainty = function(o) {
 # Sample single average value from uncertainty distribution(s)
 # ---------------------------------------------------------
 sample_average = function(o, average_fn = "median") {
-  
+ 
   # Extract all parameters for which uncertainty has been defined
   u = parse_yaml(o, "all", uncert = "*read*")
   
