@@ -24,7 +24,7 @@ seasonality_fn:
     from: -1
     to: 1
     length.out: 365
-seasonality_scaler: 0.3
+seasonality_scaler: 0.0
 
 # Number of days to shift seasonality start
 seasonality_shift: 120  # 0 represents mid-winter

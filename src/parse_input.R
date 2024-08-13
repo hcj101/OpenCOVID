@@ -72,8 +72,8 @@ parse_yaml = function(o, scenario, fit = NULL, uncert = NULL, read_array = FALSE
   
   # ---- Demographics ----
   
-  # Hardcode maximum upper age to 90
-  age_max = 90
+  # Hardcode maximum upper age to 105
+  age_max = 105
   
   # All ages modelled
   y$ages = 1 : age_max - 1L
