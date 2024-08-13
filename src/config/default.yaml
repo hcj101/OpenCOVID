@@ -6,7 +6,7 @@
 population_size: 100000
 
 # Number of days to simulate
-n_days: 200
+n_days: 400
 
 # ---- Initialisation settings ----
 
@@ -14,7 +14,7 @@ n_days: 200
 previously_infected: 0.3
 
 # Number of days over which these past infections have occured
-n_days_init: -360
+n_days_init: -365
 
 # Seasonality profile
 seasonality_fn: 
@@ -122,13 +122,13 @@ acquired_immunity:
 # Priority group definitions
 priority_groups: 
 - id: high_priority
-  name: "65+ or comorbidities"
+  name: "60+"
   priority: 1
-  condition: "age >= 65 | comorbidities == TRUE"
+  condition: "age >= 60"
 - id: low_priority
   name: "18-65 year olds"
   priority: 2
-  condition: "age >= 18 & age < 65"
+  condition: "age >= 18 & age < 60"
   
 # Risk groups
 risk_groups:
@@ -168,7 +168,7 @@ vaccine_defintion:
     mid: [21, 70]
     lb: [0.10, 0.10]
     ub: [0.40, 0.85]
-  subsequent_dose_days: 28  # Use 0 for a single dose vaccine
+  subsequent_dose_days: 0  # Use 0 for a single dose vaccine
   booster_efficacy:
     fn: "logistic_inv"
     slope: 1.8
@@ -185,11 +185,11 @@ vaccine_update:
 # Primary vaccination rollout (use -ve for past dates, +ve for future dates)
 vaccine_rollout: 
 - id: high_priority
-  coverage: 0.8
-  start: -180   # Date index for primary vaccination to begin
-  end: -150     # Date index for primary vaccination to reach 'coverage'
+  coverage: 0.0
+  start: 1000   # Date index for primary vaccination to begin
+  end: 1001     # Date index for primary vaccination to reach 'coverage'
 - id: low_priority
-  coverage: 0.6
+  coverage: 0.0
   start: -150
   end: -120
   
@@ -715,8 +715,8 @@ calibration_weights:
   time: "none"  # OPTIONS: 'none', 'weak', 'strong', 'exponential'
   peak: "none"  # OPTIONS: 'none', 'weak', 'strong'
   metric:
-    confirmed: 1.0
-    deaths: 1.0
+    confirmed: 0.0
+    deaths: 0.0
     hospital_admissions: 1.0
     icu_admissions: 1.0
     hospital_beds: 0.0
