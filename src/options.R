@@ -144,7 +144,7 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$check_yaml_consistency = FALSE  # Should be more efficient to be a default check
   
   # Choose cluster partition for parallel jobs
-  o$cluster_partition = "scicore" # OPTIONS: "covid19" or "scicore"
+  o$cluster_partition = "normal" # OPTIONS: "normal"
   
   # If running on scicore partition, you also need to define a job time 
   # 
@@ -166,8 +166,8 @@ set_options = function(do_step = NA, quiet = FALSE) {
   o$job_limit = 600
   
   # Define names for cluster log and error files
-  o$log_file = "scicore_log.txt"
-  o$err_file = "scicore_error.txt"
+  o$log_file = "covid_log.txt"
+  o$err_file = "covid_error.txt"
   
   # Flag to remove cluster logs when jobs have successfully completed
   o$rm_cluster_log = TRUE  # Set to FALSE to bebug any cluster errors

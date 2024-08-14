@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=opencovid
-#SBATCH --account=penny
 #SBATCH --cpus-per-task=1
+#SBATCH --ntasks=16                  
 #SBATCH --output=/dev/null
 #SBATCH --error=log/%A_%a.txt
 
@@ -22,8 +22,8 @@
 ############################################################
 
 # Load R
-module purge
-ml R/4.1.0-foss-2018b
+#module purge
+#ml R/4.1.0-foss-2018b
 
 # Extract inputs
 job_type=$1
@@ -39,4 +39,3 @@ Rscript submit.R $job_type $job_id
 
 # Write job ID to log file
 echo "$job_id" >> $log_file
-
