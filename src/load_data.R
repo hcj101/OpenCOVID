@@ -17,7 +17,7 @@ load_data = function(o, fit, synthetic = NULL) {
     
     # Extract subset of inputs relevant for loading appropriate data
     opts = c(type = fit$input$calibration_type, fit$input$calibration_options)
-    browser()
+ 
     # Append country codes (converted from ISO2) using countrypackage package
     #
     # NOTE: countrycode is installed as a dependency of socialmixr
@@ -46,7 +46,7 @@ load_data = function(o, fit, synthetic = NULL) {
   # Display target Re if appropriate
   if (!is.na(fit$target))
     message("  > Re target: ", round(fit$target, digits = 2))
-  
+
   # Quick plot of fitting data
   # g = ggplot(fit$data, aes(x = date, y = value, colour = metric)) +
   #   geom_line(size = 3, alpha = 0.5) +
@@ -165,7 +165,7 @@ load_epi = function(o, opts, fit, synthetic) {
 if (opts$data_source$epi == "RESPICOMPASS") {
   
   # Load raw deaths data from RespiCompass
-  raw_data = read.csv(o$respicompass_api$deaths)
+  raw_data = read.csv(o$respicompass$deaths)
   
   # Select only columns of interest and convert dates to R-interpretable
   data_deaths = raw_data %>%
@@ -193,7 +193,7 @@ if (opts$data_source$epi == "RESPICOMPASS") {
     stop("No RespiCompass death data found for country '", opts$country)
   
   # Load raw hospital admissions data from RespiCompass
-  raw_data = read.csv(o$respicompass_api$hospital_admissions, fileEncoding = "UTF-8-BOM")
+  raw_data = read.csv(o$respicompass$hospital_admissions, fileEncoding = "UTF-8-BOM")
   
   # Select only columns of interest and convert dates to R-interpretable
   data_hosp_admissions = raw_data %>%
@@ -213,7 +213,7 @@ if (opts$data_source$epi == "RESPICOMPASS") {
     arrange(date) 
   
   # Load raw icu admissions data from RespiCompass
-  raw_data = read.csv(o$respicompass_api$icu_admissions, fileEncoding = "UTF-8-BOM")
+  raw_data = read.csv(o$respicompass$icu_admissions, fileEncoding = "UTF-8-BOM")
   
   # Select only columns of interest and convert dates to R-interpretable
   data_icu_admissions = raw_data %>%
@@ -264,6 +264,7 @@ fit$data[, value := value / scale_pop]
 
 return(fit)
 }
+
 
 # ---------------------------------------------------------
 # Load or calculate Re estimates

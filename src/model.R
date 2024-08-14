@@ -33,7 +33,10 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   # Shorthand for model parameters
   p = yaml$parsed
   
-  # ---- Model set up ----
+  # Synthetic contact matrices
+  contact_matrices = load_contacts(o, opts)
+
+    # ---- Model set up ----
   
   if (verbose != "none") message(" - Running model")
   
@@ -41,7 +44,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   ppl_df = create_ppl(p, verbose = verbose)
   
   # Generate full contact network outside of main model loop (see networks.R)
-  network = create_network(p, ppl_df, do_plot, verbose)
+  network = create_network(p, contact_matrices, ppl_df, do_plot, verbose)
   
   # Initialise infections/vaccinations
   ppl_df = initiate_epidemic(p, ppl_df)
@@ -1688,3 +1691,12 @@ fn_ageing = function(m, p, ppl, date_idx) {
   return(list(m, ppl))
 }
 
+
+# ---- Load synthetic contact matrices ----
+load_contacts = function(o, opts) {
+  
+  load(o$contact_matrices)
+  
+  return(contact_all)
+  
+}

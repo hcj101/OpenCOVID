@@ -11,8 +11,8 @@
 # ---------------------------------------------------------
 # Parent function for create network
 # ---------------------------------------------------------
-create_network = function(p, ppl, do_plot, verbose) {
-  
+create_network = function(p, contact_matrices, ppl, do_plot, verbose) {
+ 
   if (verbose != "none")
     message("  > Creating contact network: ", p$network_structure)
   
@@ -64,7 +64,7 @@ create_network = function(p, ppl, do_plot, verbose) {
   
   # Create basic small-world, age-structured network
   if (p$network_structure == "age")
-    elist = create_age(p, ppl)
+    elist = create_age(p, contact_matrices, ppl)
   
   # Create uber basic random network
   if (p$network_structure == "random")
@@ -316,11 +316,11 @@ create_residual = function(p, ppl, elist) {
 # ---------------------------------------------------------
 # Create standalone, basic small-world, age-structured network
 # ---------------------------------------------------------
-create_age = function(p, ppl) {
+create_age = function(p, contact_matrices, ppl) {
  
   # Load POLYMOD contact matrix (single ages bins by default)
   # polymod_matrix = load_polymod(p)$matrix
-  prem_matrix = load_prem(p)$matrix
+  prem_matrix = load_prem(p, contact_matrices)$matrix
  
   # Extract the age groups that were created by socialmixr, usually the oldest individuals are lumped together
   #polymod_age_groups = 1 : length(names(polymod_matrix))
@@ -489,17 +489,15 @@ load_polymod = function(p, age_bins = p$ages) {
 # Load synthetic contact matrix (Prem 2021)
 # https://github.com/kieshaprem/synthetic-contact-matrices/tree/master/generate_synthetic_matrices/output
 # ---------------------------------------------------------
-load_prem = function(p, age_bins = p$ages) {
-  load("C:/Users/helen/Downloads/contact_all.rdata")
+load_prem = function(p, contact_matrices) {
  
   # Extract synthetic contact matrix for target country (converting ISO2 to ISO3)
   country_ISO3 = countrycode::countrycode(p$contact_matrix_countries, "iso2c", "iso3c")
-  country_num = grep(country_ISO3, names(contact_all))
-  prem_data = contact_all[[country_num]]
-    
+  country_num = grep(country_ISO3, names(contact_matrices))
+  prem_data = contact_matrices[[country_num]]
+  
   # Convert matrix to datatable and store along with age group pop sizes
-  prem = list(matrix   = data.table(prem_data), 
-                 pop_size = rep(NA, nrow(prem_data)))
+  prem = list(matrix   = data.table(prem_data))
   
   return(prem)
 }

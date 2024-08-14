@@ -36,11 +36,12 @@ set_options = function(do_step = NA, quiet = FALSE) {
   # ---- Data references ----
   
   # RespiCompass data links
-  o$respicompass_api = 
-    list(icu_admissions = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological//ICUadmissions.csv", 
-         hospital_admissions  = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological/hospitaladmissions.csv",
-         deaths = "C://Users//helen//Documents//GitHub//respinea//src//data//covid-19//epidemiological//deaths.csv",
-         cases = "C://Users//helen//Documents//GitHub//respinea//src//data//miscellaneous//detections//pathogen_detection.csv")
+   
+  o$respicompass = 
+    list(icu_admissions = paste0(o$pth$data_epi, "/ICUadmissions.csv"), 
+         hospital_admissions  = paste0(o$pth$data_epi, "/hospitaladmissions.csv"),
+         deaths = paste0(o$pth$data_epi, "/deaths.csv"),
+         cases = paste0(o$pth$data_detections, "/pathogen_detection.csv"))
   
   # ECDC data links
   o$ecdc_api = 
@@ -59,6 +60,8 @@ set_options = function(do_step = NA, quiet = FALSE) {
                        hospital_admissions = "Weekly new hospital admissions per 100k", 
                        icu_admissions      = "Weekly new ICU admissions per 100k")
   
+  o$contact_matrices = paste0(o$pth$data_contact, "/contact_all.rdata")
+
   # Use R or python backend for parsing yaml files
   #
   # NOTE: Python package can handle anchors and aliases

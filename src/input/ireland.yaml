@@ -4,7 +4,7 @@
   
 # ---- Baseline settings ----
 
-population_size: 10000
+population_size: 100000
         
 # Run all simulations for 500 days: 100 days burn-in, 100 days fitting data, 300 days projection
 n_days: 500 

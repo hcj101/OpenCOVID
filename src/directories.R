@@ -30,6 +30,7 @@ set_dirs = function(o) {
   # Parent path of all input files
   pth$input  = file.path(pth$code, "input")
   pth$config = file.path(pth$code, "config")
+  pth$data = file.path(pth$code, "data")
   
   # Paths to model configuration files
   pth$states    = file.path(pth$config, "model_states.yaml")
@@ -63,6 +64,17 @@ set_dirs = function(o) {
   
   # User-specified model parameters for this analysis
   pth$params_user = file.path(pth$input, paste0(o$analysis_name, ".yaml"))
+  
+  # ---- Data files ----
+  
+  # Epi data provided by RespiCompass
+  pth$data_epi = file.path(pth$data, "covid-19", "epidemiological")
+  
+  # Detections data provided by RespiCompass
+  pth$data_detections = file.path(pth$data, "miscellaneous", "detections")
+  
+  # Synthetic contact matrices (Prem et al. 2021)
+  pth$data_contact = file.path(pth$data, "miscellaneous", "contact_matrices")
   
   # ---- Output directories ----
   
