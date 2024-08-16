@@ -11,5 +11,5 @@ log/
 cache/
 input/*
 !input/demo.yaml
-!input/ireland.yaml
+input/ireland.yaml
 output/

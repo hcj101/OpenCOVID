@@ -59,7 +59,7 @@ load_data = function(o, fit, synthetic = NULL) {
 # Load empirical epidemiological data from source (or generate synthetic data)
 # ---------------------------------------------------------
 load_epi = function(o, opts, fit, synthetic) {
-  
+
   # If desired, generate synthetic data instead of actual data
   #
   # NOTE: This is used to test/debug calibration process
@@ -180,6 +180,12 @@ if (opts$data_source$epi == "RESPICOMPASS") {
     # Keep only dates of interest and melt down...
     right_join(y  = dates_df,
                by = "date") %>%
+    arrange(date) %>%
+    # Scale 'weekly' appropriately...
+    mutate(deaths = deaths / 7) %>%
+    rename(any_of(o$data_dict$respicompass)) %>%
+    # Back fill weekly data to represent that value over the whole week...
+    fill(any_of(names(o$data_dict$respicompass)), .direction = "up") %>% 
     pivot_longer(cols = c(-date, -day), 
                  names_to = "metric") %>%
     arrange(metric, date) %>%
@@ -262,6 +268,7 @@ if (opts$data_source$epi == "RESPICOMPASS") {
 scale_pop = opts$country_pop / 1e5
 fit$data[, value := value / scale_pop]
 
+browser()
 return(fit)
 }
 

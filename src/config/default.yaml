@@ -187,11 +187,11 @@ vaccine_rollout:
 - id: high_priority
   coverage: 0.0
   start: 1000   # Date index for primary vaccination to begin
-  end: 1001     # Date index for primary vaccination to reach 'coverage'
+  end: 1000     # Date index for primary vaccination to reach 'coverage'
 - id: low_priority
   coverage: 0.0
-  start: -150
-  end: -120
+  start: 1000
+  end: 1000
   
 # Vaccine booster rollout (only groups to recieve a booster need to be specified)
 booster_doses: 1000  # Maximum number of doses per day (per 100,000 people)

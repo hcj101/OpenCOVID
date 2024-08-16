@@ -60,6 +60,11 @@ set_options = function(do_step = NA, quiet = FALSE) {
                        hospital_admissions = "Weekly new hospital admissions per 100k", 
                        icu_admissions      = "Weekly new ICU admissions per 100k")
   
+  # Data dictionary: RespiCompass hospital & ICU indicators
+  o$data_dict$respicompass = c(deaths = "Weekly deaths",
+                       hospital_admissions = "Weekly new hospital admissions", 
+                       icu_admissions      = "Weekly new ICU admissions")
+  
   o$contact_matrices = paste0(o$pth$data_contact, "/contact_all.rdata")
 
   # Use R or python backend for parsing yaml files

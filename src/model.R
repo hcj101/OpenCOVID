@@ -186,7 +186,7 @@ model = function(o, scenario, seed = NA, fit = NULL, uncert = NULL, do_plot = FA
   # Display model run time if appropriate
   if (verbose != "none")
     message("  > Model runtime: ", results$time_taken)
-  
+  browser()
   return(results)
 }
 

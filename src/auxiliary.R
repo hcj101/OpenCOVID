@@ -416,8 +416,8 @@ submit_cluster_jobs = function(o, n_jobs, bash_file, ...) {
                        paste0("--mem=",       o$job_memory), 
                        paste0("--qos=",       o$job_queue))
     
-    # If using scicore partition, include run time option (unlimited on covid19 partition)
-    if (o$cluster_partition == "scicore")
+    # If using scicore partition, include run time option 
+    if (o$cluster_partition == "normal")
       sbatch_options = c(sbatch_options, paste0("--time=", o$job_time))
     
     # Collapse into a whitespace-seperated string
