@@ -216,7 +216,12 @@ if (opts$data_source$epi == "RESPICOMPASS") {
     # Keep only dates of interest 
     right_join(y  = dates_df,
                by = "date") %>%
-    arrange(date) 
+    arrange(date) %>%
+   # Scale 'weekly' appropriately...
+    mutate(value = value / 7) %>%
+    rename(any_of(o$data_dict$respicompass)) %>%
+    # Back fill weekly data to represent that value over the whole week...
+    fill(any_of(names(o$data_dict$respicompass)), .direction = "up")  
   
   # Load raw icu admissions data from RespiCompass
   raw_data = read.csv(o$respicompass$icu_admissions, fileEncoding = "UTF-8-BOM")
@@ -236,7 +241,13 @@ if (opts$data_source$epi == "RESPICOMPASS") {
     # Keep only dates of interest 
     right_join(y  = dates_df,
                by = "date") %>%
-    arrange(date) 
+    arrange(date) %>%
+    # Scale 'weekly' appropriately...
+    mutate(value = value / 7) %>%
+    rename(any_of(o$data_dict$respicompass)) %>%
+    # Back fill weekly data to represent that value over the whole week...
+    fill(any_of(names(o$data_dict$respicompass)), .direction = "up")  
+  
     
     # Combine hospital and ICU admissions data
    data_hospital = full_join(data_hosp_admissions,
@@ -268,7 +279,6 @@ if (opts$data_source$epi == "RESPICOMPASS") {
 scale_pop = opts$country_pop / 1e5
 fit$data[, value := value / scale_pop]
 
-browser()
 return(fit)
 }
 
