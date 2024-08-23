@@ -428,6 +428,7 @@ quality_of_fit = function(o, fit, r_idx, do_plot = FALSE) {
 
     # Also cumulatively sum model output
     model_df = output_df %>%
+      mutate(date = as.integer(date)) %>%
       group_by(param_id, round, seed, metric) %>%
       mutate(value = cumsum(value)) %>%
       ungroup() %>%

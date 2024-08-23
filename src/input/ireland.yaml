@@ -7,7 +7,7 @@
 population_size: 10000
         
 # Run all simulations for 500 days: 100 days burn-in, 100 days fitting data, 300 days projection
-n_days: 50 
+n_days: 200 
 n_days_init: -365
 
 # Initial conditions (sample from normal distribution)
